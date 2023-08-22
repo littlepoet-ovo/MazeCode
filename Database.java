@@ -26,7 +26,7 @@ public class Database {
         // 1.导入驱动类
         Class.forName("com.mysql.cj.jdbc.Driver");
         // 2.用户信息和url
-        String url = "jdbc:mysql://localhost:3306/game?useSSL=false&serverTimezone=UTC";
+        String url = "jdbc:mysql://localhost:3306/game?useSSL=false&serverTimezone=UTC&charactorEncoding=utf-8";
         String user = "root";
         String password = "root";
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
@@ -202,7 +202,7 @@ public class Database {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         Database d = new Database();
-        d.link();
+        System.out.println(d.link());
 //        d.registrant("gaodie","gd123",600);
 //        d.registrant("wangleru","wlr123",600);
 //        d.registrant("zijie","123456",600);
