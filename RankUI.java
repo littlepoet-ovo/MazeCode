@@ -15,9 +15,9 @@ public class RankUI extends JFrame implements ActionListener{
     JButton selJB = new JButton("加载");
     JComboBox<String> modleSel = new JComboBox<>(new String[] {"金币排行", "闯关排行"});
     JComboBox<String> levSel = new JComboBox<>(new String[] {"level1", "level2"});
-    JScrollPane moneyJP;
+    JScrollPane moneyJSP;
     JTable moneyT;
-    JScrollPane levelJP;
+    JScrollPane levelJSP;
     JTable levelT;
     public RankUI(Database d) {
         this.d = d;
@@ -25,7 +25,7 @@ public class RankUI extends JFrame implements ActionListener{
         initHead();
         initMoneyTable();
         initModTable();
-        levelJP.setVisible(false);
+        levelJSP.setVisible(false);
         //setFont(new Font("宋体",Font.BOLD,15));
         this.setVisible(true);
     }
@@ -41,9 +41,9 @@ public class RankUI extends JFrame implements ActionListener{
         columnModel.getColumn(3).setPreferredWidth(60);
         columnModel.getColumn(4).setPreferredWidth(120);
 //        model.addRow(new Object[]{"1", "user123", 100});
-        levelJP = new JScrollPane(levelT); // Wrap the table in a JScrollPane
-        levelJP.setBounds(10, 80, 350, 400);
-        this.getContentPane().add(levelJP); // Add the JScrollPane to the content pane
+        levelJSP = new JScrollPane(levelT); // Wrap the table in a JScrollPane
+        levelJSP.setBounds(10, 80, 350, 400);
+        this.getContentPane().add(levelJSP); // Add the JScrollPane to the content pane
     }
     private void initMoneyTable() {
         moneyT = new JTable(new DefaultTableModel(0, 3));
@@ -55,9 +55,9 @@ public class RankUI extends JFrame implements ActionListener{
         columnModel.getColumn(1).setPreferredWidth(210);
         columnModel.getColumn(2).setPreferredWidth(70);
 //        model.addRow(new Object[]{"1", "user123", 100});
-        moneyJP = new JScrollPane(moneyT); // Wrap the table in a JScrollPane
-        moneyJP.setBounds(10, 80, 350, 400);
-        this.getContentPane().add(moneyJP); // Add the JScrollPane to the content pane
+        moneyJSP = new JScrollPane(moneyT); // Wrap the table in a JScrollPane
+        moneyJSP.setBounds(10, 80, 350, 400);
+        this.getContentPane().add(moneyJSP); // Add the JScrollPane to the content pane
     }
 
     private void initHead() {
@@ -89,13 +89,13 @@ public class RankUI extends JFrame implements ActionListener{
             JComboBox<String> combo = (JComboBox<String>) e.getSource();
             String selectedValue = (String) combo.getSelectedItem();
             if(selectedValue.equals("闯关排行")){
-                levelJP.setVisible(true);
-                moneyJP.setVisible(false);
+                levelJSP.setVisible(true);
+                moneyJSP.setVisible(false);
                 jlb2.setVisible(true);
                 levSel.setVisible(true);
             }else {
-                levelJP.setVisible(false);
-                moneyJP.setVisible(true);
+                levelJSP.setVisible(false);
+                moneyJSP.setVisible(true);
                 jlb2.setVisible(false);
                 levSel.setVisible(false);
             }
