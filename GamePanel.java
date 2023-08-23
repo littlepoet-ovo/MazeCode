@@ -25,14 +25,14 @@ public class GamePanel extends JPanel{//游戏迷宫面板
     int totalmoney=0,money=0;
 
 
-    public GamePanel(int row, int col, GameRunningData grd){
+    public GamePanel(int row, int col, GameRunningData grd,int gameModel,String levelName){
         this.grd = grd;
         this.row = row;
         this.col = col;
         leftX = 0;
         leftY = 0;
         mapUtil = new MapUtil(row, col);
-        map = mapUtil.getRandomMap(mapUtil.getMap());
+        map = mapUtil.getNeedMap(gameModel,levelName);
         setBounds(10,120,765,500);
 
         table = new JTable(2*row+1,2*col+1);
