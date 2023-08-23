@@ -1,4 +1,3 @@
-
 package com.sdxf.game;
 
 import javax.swing.*;
@@ -26,7 +25,8 @@ public class GamePanel extends JPanel{//游戏迷宫面板
     int totalmoney=0,money=0;
 
 
-    public GamePanel(int row, int col){
+    public GamePanel(int row, int col, GameRunningData grd){
+        this.grd = grd;
         this.row = row;
         this.col = col;
         leftX = 0;
@@ -79,14 +79,14 @@ public class GamePanel extends JPanel{//游戏迷宫面板
                 model.setValueAt(val,row,column);
             }
             //当传来的数据为颜色时就改变背景颜色
-                if(value instanceof Color){
+            if(value instanceof Color){
                 cellComponent.setBackground((Color)value);
                 setText("");//单元格的文本设置为空字符串，从而隐藏单元格的内容
-                }
-                //撞墙时保持焦点不变
-                if(flag==1) {
-                   Focus();
-                }
+            }
+            //撞墙时保持焦点不变
+            if(flag==1) {
+                Focus();
+            }
             return cellComponent;
         }
     };
@@ -151,16 +151,16 @@ public class GamePanel extends JPanel{//游戏迷宫面板
             }
 
             //实时更新用户所在位置
-                currentRow = newRow;
-                currentColumn = newColumn;
-                //更新位置
-                table.repaint();
+            currentRow = newRow;
+            currentColumn = newColumn;
+            //更新位置
+            table.repaint();
         }
 
         //如果下一步是墙保持原来位置不变
         else if(isValidateMove(newRow, newColumn) == false){
             newRow = currentRow;
-           newColumn = currentColumn;
+            newColumn = currentColumn;
         }
     }
 
@@ -196,7 +196,7 @@ public class GamePanel extends JPanel{//游戏迷宫面板
         movePlayer();
 
     }
-    
+
     //鼠标操作
     private void moveMouse(int row, int col){
         if(map[currentRow][currentColumn]!=-2) {
@@ -207,4 +207,3 @@ public class GamePanel extends JPanel{//游戏迷宫面板
     }
 
 }
-
