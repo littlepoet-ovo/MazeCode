@@ -16,7 +16,7 @@ public class RegisterUI extends JFrame implements ActionListener {
     public RegisterUI(Database d) {
         this.d = d;
         this.init();
-        this.setTitle("注册");
+        this.setTitle("迷宫游戏 - 注册");
         this.setSize(400, 300);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
@@ -91,13 +91,16 @@ public class RegisterUI extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(null,"账号密码不能为空");
                 return ;
             }
+
             int register_state=d.registrant(account,password,50);
+
             if(register_state==200){
                 JOptionPane.showMessageDialog(null,"注册成功！,请返回登录");
                 this.dispose();
             }else {
                 JOptionPane.showMessageDialog(null,"注册失败！,账号名已存在");
             }
+
         } else if (e.getSource() == this.back_btn) {
             this.dispose();
             new LoginUI(d);
