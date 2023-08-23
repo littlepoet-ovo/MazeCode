@@ -3,10 +3,8 @@ package com.sdxf.game;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.Component;
 import java.net.URL;
-import java.sql.SQLException;
-import javax.swing.*;
+
 
 public class RegisterUI extends JFrame implements ActionListener {
     JTextField account_jtf = new JTextField();
@@ -27,7 +25,7 @@ public class RegisterUI extends JFrame implements ActionListener {
     }
 
     public void init() {
-       //int ans = d.login(,);
+        //int ans = d.login(,);
 
         JLabel account_jlb = new JLabel("账号");
         JLabel password_jlb = new JLabel("密码");
@@ -89,8 +87,11 @@ public class RegisterUI extends JFrame implements ActionListener {
         if (e.getSource() == this.register_btn) {
             String account = this.account_jtf.getText();
             String password = this.password_jtf.getText();
-
-            int register_state=d.registrant(account,password,d.getMoney());
+            if(account.isEmpty() || password.isEmpty()){
+                JOptionPane.showMessageDialog(null,"账号密码不能为空");
+                return ;
+            }
+            int register_state=d.registrant(account,password,50);
             if(register_state==200){
                 JOptionPane.showMessageDialog(null,"注册成功！,请返回登录");
             }else {
@@ -102,4 +103,3 @@ public class RegisterUI extends JFrame implements ActionListener {
         }
     }
 }
-
