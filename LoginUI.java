@@ -17,7 +17,7 @@ public class LoginUI extends JFrame implements ActionListener {
     public LoginUI(Database d) {
         this.d = d;
         this.init();
-        this.setTitle("登录");
+        this.setTitle("迷宫游戏 - 登录");
         this.setSize(400, 300);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
@@ -87,20 +87,18 @@ public class LoginUI extends JFrame implements ActionListener {
             String account = this.account_jtf.getText();
             String password = this.password_jtf.getText();
             int login_state=d.login(account,password);
-            if(login_state==200){
-                JOptionPane.showMessageDialog(null,"登录成功！");
-                this.dispose();
 
+            if(login_state==200){
+                new modeSel(d);
+                dispose();
                 //进入下一界面
             }else if(login_state==-1){
                 JOptionPane.showMessageDialog(null,"账号不存在！");
             }else if(login_state==-2){
                 JOptionPane.showMessageDialog(null,"账号或密码错误！");
             }
-
         } else if (e.getSource() == this.register_btn) {
             new RegisterUI(d);
-            this.dispose();
         }
     }
 }
