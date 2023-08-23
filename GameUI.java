@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class GameUI extends JFrame implements ActionListener {
+public class GameUI extends JFrame implements ActionListener, GameRunningData{
     private int useTime = 0;
     private int sourceMoney;
     private int useMoney = 0;
@@ -27,11 +27,12 @@ public class GameUI extends JFrame implements ActionListener {
     private ScheduledExecutorService scheduler;
     private boolean isRuning = true; //游戏是否运行中
     private JPanel stop = new JPanel();
-    private JPanel start;//游戏主体，参数传入
+    private GamePanel start;//游戏主体，参数传入
     private JButton exitJBT = new JButton("退出");
     private JButton stopJBT = new JButton("暂停");
-    public GameUI(Database d, int mode, String nowLevel,JPanel start){
-        this.start = start;
+    JLabel moneyJLB;
+    public GameUI(Database d, int mode, String nowLevel){
+        this.start = new GamePanel(9, 12,this);;
         this.nowLevel = nowLevel;
         this.mode = mode;
         this.d = d;
@@ -43,6 +44,7 @@ public class GameUI extends JFrame implements ActionListener {
         }
         initJPanel();
         initButton();
+        start.requestFocus();
         setVisible(true);
     }
 
@@ -103,9 +105,9 @@ public class GameUI extends JFrame implements ActionListener {
         jlb2.setFont(new Font("黑体",Font.BOLD,25));
         jlb2.setBounds(460,20,150,50);
         this.sourceMoney = d.getMoney();
-        JLabel jlb3 = new JLabel(String.format("金币：%d",this.sourceMoney));
-        jlb3.setFont(new Font("宋体",Font.BOLD,15));
-        jlb3.setBounds(620,80,100,30);
+        moneyJLB = new JLabel(String.format("金币：%d",this.sourceMoney));
+        moneyJLB.setFont(new Font("宋体",Font.BOLD,15));
+        moneyJLB.setBounds(620,80,100,30);
         if(mode==1){
             timeJLB.setFont(new Font("宋体",Font.BOLD,20));
             timeJLB.setBounds(400,80,100,30);
@@ -115,7 +117,7 @@ public class GameUI extends JFrame implements ActionListener {
 
         this.getContentPane().add(jlb1);
         this.getContentPane().add(jlb2);
-        this.getContentPane().add(jlb3);
+        this.getContentPane().add(moneyJLB);
 
     }
 
@@ -153,7 +155,9 @@ public class GameUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if(o==restarJMI){
+            new GameUI(d,mode, "");
             System.out.println("点击了重新开始");
+            closeApp();
         }else if(o==backJMI){
             closeApp();
             System.out.println("点击了返回主窗口");
@@ -163,6 +167,7 @@ public class GameUI extends JFrame implements ActionListener {
         }else if(o==stopJBT){
             System.out.println("点击了暂停按钮");
             if (isRuning){
+                start.Focus();
                 isRuning = false;
                 start.setVisible(false);
                 stop.setVisible(true);
@@ -177,21 +182,58 @@ public class GameUI extends JFrame implements ActionListener {
     }
     private void closeApp(){
         if(mode==1) scheduler.shutdown();
-        JOptionPane.showMessageDialog(null,"将要关闭窗口");
+//        JOptionPane.showMessageDialog(null,"将要关闭窗口");
         System.exit(0);
 //                dispose();
     }
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         Database d = new Database();
         d.link();
-        JPanel start = new JPanel();
-        start.setLayout(null);
-        start.setBounds(10,120,765,500);
-        JLabel jlb1 = new JLabel("游戏运行中。。。");
-        jlb1.setFont(new Font("黑体",Font.BOLD,40));
-        jlb1.setBounds(251,150,350,50);
-        start.add(jlb1);
         System.out.println(d.login("zijie","123456"));
-        new GameUI(d,1, "第一关", start);
+        new GameUI(d,0, "");
+    }
+
+    @Override
+    public void Winning(int money) {
+        System.out.println("游戏胜利！");
+        if(mode==1){
+            int ans = d.saveGameData(useTime,useMoney,nowLevel);
+            if(ans == 200){
+                System.out.println("运行成功");
+            }else if(ans == 201){
+                System.out.println("打破纪录");
+            }else{
+                System.out.println("运行失败");
+            }
+        }
+        int ans = d.setMoney(money-useMoney);
+        if(ans==200){
+            System.out.println("修改成功");
+        }else{
+            System.out.println("改动是吧，错误代码"+ans);
+        }
+
+
+    }
+
+    @Override
+    public boolean useMoney(int need) {
+        if(need + useMoney <= sourceMoney){
+            useMoney += need;
+            moneyJLB.setText(String.format("金币：%d",this.sourceMoney-this.useMoney));
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void failed(boolean isReserve) {
+        if (!isReserve){
+            System.out.println("游戏失败且扣除游戏币");
+            d.setMoney(-1*useMoney);
+        }else{
+            System.out.println("游戏失败不扣除金币");
+        }
+
     }
 }
