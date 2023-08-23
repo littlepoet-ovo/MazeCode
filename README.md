@@ -18,3 +18,4 @@
 ## MapPanel 游戏地图加载和操作游戏
 ## MapGenerate 创建游戏地图、读取本地地图数据
 ## ModeTrickUI 关卡选择界面
+## GameRunningData 游戏面板和游戏主体数据交互的接口
