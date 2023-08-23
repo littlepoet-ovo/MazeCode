@@ -14,7 +14,7 @@ public class RankUI extends JFrame implements ActionListener{
     Database d;
     JButton selJB = new JButton("加载");
     JComboBox<String> modleSel = new JComboBox<>(new String[] {"金币排行", "闯关排行"});
-    JComboBox<String> levSel = new JComboBox<>(new String[] {"level1", "level2"});
+    JComboBox<String> levSel = new JComboBox<>(new String[] {"level1", "level2","level3"});
     JScrollPane moneyJSP;
     JTable moneyT;
     JScrollPane levelJSP;
@@ -141,7 +141,7 @@ public class RankUI extends JFrame implements ActionListener{
                 while (model.getRowCount()>0){
                     model.removeRow(0);
                 }
-                for (int i = 0; i < dataP.length; i++) {
+                for (int i = 0; i < dataP.length && !dataP[i].isEmpty(); i++) {
                     String[] dataS = dataP[i].split("&");
                     String[] rslt = new String[5];
                     rslt[0] = String.format("%d",i+1);
