@@ -32,7 +32,7 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData{
     private JButton stopJBT = new JButton("暂停");
     JLabel moneyJLB;
     public GameUI(Database d, int mode, String nowLevel){
-        this.start = new GamePanel(9, 12,this);;
+        this.start = new GamePanel(9, 12,this,0,"");
         this.nowLevel = nowLevel;
         this.mode = mode;
         this.d = d;
