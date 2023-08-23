@@ -133,6 +133,4 @@ public class modeSel extends JFrame {
     public static void main(String[] args) {
         new modeSel(new Database());
     }
-
-
 }
