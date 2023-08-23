@@ -16,7 +16,7 @@ public class modeSel extends JFrame {
         String money =String.valueOf(d.getMoney());
 
         //窗口设计
-        setTitle("迷宫游戏——游戏模式——"+userName);
+        setTitle("迷宫游戏 - 游戏模式 - "+userName);
         setDefaultCloseOperation(this.EXIT_ON_CLOSE);//结束程序
 
         setSize(500, 700);
@@ -89,9 +89,11 @@ public class modeSel extends JFrame {
         btnRank.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                dispose();
                 new RankUI(d);
             }
         });
+
         btnExit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -101,15 +103,19 @@ public class modeSel extends JFrame {
                 }
             }
         });
+
         btnModel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new GameUI(d,0,"");
+                dispose();
+                new GameUI(d,0,"", 0,0);
             }
         });
+
         btnTrick.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                dispose();
                 new modeTrick(d);
             }
         });
@@ -121,10 +127,9 @@ public class modeSel extends JFrame {
         add(btnTrick);
         add(btnRank);
         add(btnExit);
+
         setVisible(true);
     }
-
-
     public static void main(String[] args) {
         new modeSel(new Database());
     }
