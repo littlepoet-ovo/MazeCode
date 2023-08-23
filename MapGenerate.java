@@ -1,5 +1,10 @@
+
 package com.sdxf.game;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.*;
 import java.awt.*;
 import javax.swing.*;
@@ -11,7 +16,7 @@ import java.io.*;
 
 public class MapGenerate extends JFrame{
     public MapGenerate(){
-        this.getContentPane().add(new GamePanel(9, 12));//new GamePanel(25, 19)即为迷宫面板
+//        this.getContentPane().add(new GamePanel(9, 12));//new GamePanel(12, 9)即为迷宫面板
         pack();
         setBounds(10,120,850,600);
         setLocationRelativeTo(null);
@@ -25,9 +30,11 @@ public class MapGenerate extends JFrame{
 }
 
 class Edge{
+
     int start;
     int end;
     int value;
+
     public Edge(){
 
     }
@@ -37,9 +44,11 @@ class Edge{
         this.end = end;
         this.value = value;
     }
-}
 
+
+}
 class Union {
+
     int count;
     int[] parent;//记录根节点
     int[] rank;//层数
@@ -101,12 +110,10 @@ class MapUtil {
         list = new ArrayList<Edge>();
         map = new ArrayList<Edge>();
         init();
-        //mapStore();//随机生成地图二维数组存到map包中
-        //getLocalMap(3);//获取map包中的指定地图二维数组，并打印出
-        //System.out.println(getLocalMapSize());//获取map包地图数量
-        //System.out.println(getLocalMapList());//获取map包所有地图名称
-        // getMap();//获得无收费站的地图二维数组
-        //getRandomMap(getMap());//获得有收费站的地图二维数组
+        //mapStore();
+        //getLocalMap(3);
+        //System.out.println(getLocalMapNum());
+        //System.out.println(getLocalMapList());
     }
 
     public void init(){
@@ -148,6 +155,7 @@ class MapUtil {
                     break;
             }
         }
+
     }
 
     public void mapStore(){
@@ -243,13 +251,6 @@ class MapUtil {
            }
        }
 
-        for (int[] row1 : map) {
-            for (int val : row1) {
-                System.out.print(val + " ");
-            }
-            System.out.println();
-        }
-
        return map;
     }
     public int[][] getMap(){
@@ -275,10 +276,14 @@ class MapUtil {
             }
         }
 
+
         //边界最左边纵向画墙
         for(int i=0;i<2*row+1;i++){
             array1[i][0] = -2;
         }
+
+
+
 
         for(Edge edge:map){
             int start = edge.start;
@@ -296,13 +301,6 @@ class MapUtil {
 
         array1[0][1]=0;
         array1[2*row][2*col-1]=0;
-
-        for (int[] row : array1) {
-            for (int val : row) {
-                System.out.print(val + " ");
-            }
-            System.out.println();
-        }
 
         return array1;
     }
@@ -324,26 +322,41 @@ class MapUtil {
         return count;
     }
 
-    public String getLocalMapList(){
+    public String [] getLevelList(){
         String directoryPath = "src/map"; // 指定目录路径
         StringBuilder fileNames = new StringBuilder(); // 用于存储文件名
 
         File directory = new File(directoryPath);
         File[] files = directory.listFiles(); // 获取目录中的所有文件
 
-        StringJoiner joiner = new StringJoiner("#");
+        ArrayList<String> stringList = new ArrayList<>();
         if (files != null) {
             for (File file : files) {
                 if (file.isFile()) {
                     String fileName = file.getName();
-                    joiner.add(fileName);
+                    String levelName = "第"+fileName.substring(0,fileName.length()-4)+"关";
+                    stringList.add(levelName);
                 }
             }
         }
 
-        return joiner.toString();
+        String[] stringArray = stringList.toArray(new String[stringList.size()]);
+        //System.out.println(Arrays.toString(stringArray));
+        return stringArray;
     }
-    public void print(){
+
+    public int[][] getNeedMap(int model,String level){
+        if(model==0){//随机
+            return getRandomMap(getMap());
+        }else {//固定
+            String  levelName = level.substring(0,level.length()-4);
+            int levelNum=Integer.parseInt(levelName);
+            return getLocalMap(levelNum);
+        }
+    }
+
+
+        public void print(){
         int index = 0;
         for(Edge edge:map){
             if(index%10==0)
@@ -354,76 +367,3 @@ class MapUtil {
     }
 
 }
-
-class GamePanel extends JPanel{//游戏迷宫面板
-    int[][] map;//游戏迷宫二维数组
-    MapUtil mapUtil;
-    int row,col;
-    int leftX,leftY;
-    //JTable table = new JTable(new DefaultTableModel(row,col));
-    //JTable table = new JTable(10,10);
-
-
-    public GamePanel(int row,int col){
-        this.row = row;
-        this.col = col;
-        leftX = 0;
-        leftY = 0;
-        mapUtil = new MapUtil(row, col);
-        map = mapUtil.getRandomMap(mapUtil.getMap());
-        setBounds(10,120,765,500);
-
-        JTable table = new JTable(2*row+1,2*col+1);
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        String[] columns = new String[2*col+1];
-        for(int i=0;i<2*col+1;i++) columns[i]="";
-        model.setColumnIdentifiers(columns);
-
-        int cellSize = 25; // 设置单元格的尺寸
-        table.setRowHeight(cellSize);
-        for (int column = 0; column < table.getColumnCount(); column++) {
-            table.getColumnModel().getColumn(column).setPreferredWidth(cellSize);
-        }
-
-        for (int column = 0; column < table.getColumnCount(); column++) {
-            table.getColumnModel().getColumn(column).setCellRenderer(renderer);
-        }
-
-        JScrollPane scrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-                JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        scrollPane.setPreferredSize(new Dimension(765,500));
-
-        this.add(scrollPane);
-    }
-
-//    public void paint(Graphics g){
-//
-//       // table=cell;
-//        //Image image = Toolkit.getDefaultToolkit().getImage("D:/1.jpg");
-//
-//    }
-
-    TableCellRenderer renderer = new DefaultTableCellRenderer() {
-        public Component getTableCellRendererComponent(JTable table, Object value,
-                                                       boolean isSelected, boolean hasFocus,
-                                                       int row, int column) {
-            Component cellComponent = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-            int val=map[row][column];
-            if (val==-2) {
-                cellComponent.setBackground(Color.GRAY);
-            } else if (val==-1) {
-                cellComponent.setBackground(Color.white);
-            }else if(val==0){
-                cellComponent.setBackground(Color.RED);
-            }else {
-                cellComponent.setBackground(Color.CYAN);
-                DefaultTableModel model = (DefaultTableModel) table.getModel();
-                model.setValueAt(val,row,column);
-            }
-
-            return cellComponent;
-        }
-    };
-}
-
