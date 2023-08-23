@@ -5,7 +5,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URL;
 
 public class modeSel extends JFrame {
     Database d;
@@ -17,7 +16,7 @@ public class modeSel extends JFrame {
         String money =String.valueOf(d.getMoney());
 
         //窗口设计
-        setTitle("迷宫游戏——游戏模式");
+        setTitle("迷宫游戏——游戏模式——"+userName);
         setDefaultCloseOperation(this.EXIT_ON_CLOSE);//结束程序
 
         setSize(500, 700);
@@ -57,7 +56,7 @@ public class modeSel extends JFrame {
         laMoney.setBounds(320, 5, 150, 50);
         laMoney.setFont(new Font("华文新魏", Font.BOLD, 25));
 
-        JButton btnModel = new JButton("随机地图");
+        JButton btnModel = new JButton("娱乐模式");
         btnModel.setBounds(141, 200, 200, 80);
         btnModel.setFont(new Font("华文新魏", Font.BOLD, 35));
         btnModel.setContentAreaFilled(false);//按钮设置为透明，这样就不会挡着后面的背景
@@ -90,7 +89,7 @@ public class modeSel extends JFrame {
         btnRank.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new modeRank(d);
+                new RankUI(d);
             }
         });
         btnExit.addActionListener(new ActionListener() {
@@ -105,7 +104,7 @@ public class modeSel extends JFrame {
         btnModel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                new GameUI(d,0,"");
             }
         });
         btnTrick.addActionListener(new ActionListener() {
