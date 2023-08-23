@@ -2,17 +2,22 @@ package com.sdxf.game;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class modeTrick extends JFrame {
     public modeTrick(Database d) {
-        String [] data={"1","2"};
+        //String [] data={"1","2"};
         //窗口设计
-        setTitle("闯关模式——关卡选择");
-        setDefaultCloseOperation(this.EXIT_ON_CLOSE);
-        setSize(500, 700);
+        setTitle("迷宫游戏 - 闯关模式 - 关卡选择 - "+d.getUsername());
+        this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);//关闭模式设置
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+               dispose();
+            }
+        });        setSize(500, 700);
         setLayout(null);//自由布局
         setLocationRelativeTo(null);//窗口居中显示
 
@@ -36,13 +41,29 @@ public class modeTrick extends JFrame {
         money.setBounds(400,10,150,50);
         JLabel lalevel=new JLabel("游戏关卡");
         lalevel.setBounds(200,100,500,50);
-        JList levels=new JList(data);
-        levels.setBounds(90,170,300,400);
+
+        MapUtil maputil=new MapUtil(9,12);
+        JList levels=new JList(maputil.getLevelList());
+        levels.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane jslevels=new JScrollPane(levels);
+        jslevels.setBounds(50,170,60,400);
+
+        levels.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                String s=levels.getSelectedValue().toString();
+                String itemName =s.substring(1,s.length()-1);
+                int currIndex=levels.getSelectedIndex();
+                int sumIndex=levels.getModel().getSize();
+                new GameUI(d,1,itemName,currIndex,sumIndex);
+            }
+        });
 
         back.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 modeTrick.this.dispose();
+                new modeSel(d);
             }
         });
 
@@ -50,7 +71,7 @@ public class modeTrick extends JFrame {
         add(username);
         add(money);
         add(lalevel);
-        add(levels);
+        add(jslevels);
 
         setVisible(true);
 
