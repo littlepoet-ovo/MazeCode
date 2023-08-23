@@ -1,9 +1,12 @@
 package com.sdxf.game;
 
+import jdk.nashorn.internal.scripts.JO;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -23,12 +26,15 @@ public class GamePanel extends JPanel{//游戏迷宫面板
     int newRow=0,newColumn=1;
     JTable table;
     int totalmoney=0,money=0;
+    Database d;
+    int gameModel;
 
-
-    public GamePanel(int row, int col, GameRunningData grd,int gameModel,String levelName){
+    public GamePanel(Database d,int row, int col, GameRunningData grd, int gameModel, String levelName){
         this.grd = grd;
         this.row = row;
         this.col = col;
+        this.d=d;
+        this.gameModel=gameModel;
         leftX = 0;
         leftY = 0;
         mapUtil = new MapUtil(row, col);
@@ -78,6 +84,7 @@ public class GamePanel extends JPanel{//游戏迷宫面板
                 DefaultTableModel model = (DefaultTableModel) table.getModel();
                 model.setValueAt(val,row,column);
             }
+
             //当传来的数据为颜色时就改变背景颜色
             if(value instanceof Color){
                 cellComponent.setBackground((Color)value);
@@ -87,6 +94,7 @@ public class GamePanel extends JPanel{//游戏迷宫面板
             if(flag==1) {
                 Focus();
             }
+
             return cellComponent;
         }
     };
@@ -129,7 +137,7 @@ public class GamePanel extends JPanel{//游戏迷宫面板
                 money=map[newRow][newColumn];
                 totalmoney+=money;
                 //传递收费站金额
-                grd.useMoney(money);
+              grd.useMoney(money);
             }
 
             // 更新玩家位置
@@ -147,7 +155,6 @@ public class GamePanel extends JPanel{//游戏迷宫面板
             if (map[newRow][newColumn] == 0 && newRow ==18&& newColumn ==23 ) {
                 //传送总金额
                 grd.Winning(totalmoney+10);
-                JOptionPane.showMessageDialog(this, "真是个聪明蛋！再来一局吧！");
             }
 
             //实时更新用户所在位置
