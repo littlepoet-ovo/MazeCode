@@ -205,7 +205,7 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
     public void Winning(int money) {
         System.out.println("游戏胜利！");
         if (mode == 1) {
-            int ans = d.saveGameData(useTime, useMoney, nowLevel);
+            int ans = d.saveGameData(useTime, useMoney, "第"+nowLevel+"关");
             if (ans == 200) {
                 System.out.println("运行成功");
             } else if (ans == 201) {
