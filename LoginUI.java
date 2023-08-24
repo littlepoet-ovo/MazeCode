@@ -50,12 +50,12 @@ public class LoginUI extends JFrame implements ActionListener {
         account_jlb.setBounds(50,20,60,50);
         account_jlb.setFont(new Font("华文行楷",Font.BOLD,25));
         account_jtf.setBounds(100,30,220,30);
-        account_jtf.setFont(new Font("华文新魏",Font.BOLD,20));
+        account_jtf.setFont(new Font("华文新魏",Font.BOLD,15));
         password_icon.setBounds(20,90,30,50);
         password_jlb.setBounds(50,90,60,50);
         password_jlb.setFont(new Font("华文行楷",Font.BOLD,25));
         password_jtf.setBounds(100,100,220,30);
-        password_jtf.setFont(new Font("华文新魏",Font.BOLD,20));
+//        password_jtf.setFont(new Font("华文新魏",Font.BOLD,20));
 
         login_btn.setBounds(70,170,120,40);
         register_btn.setBounds(220,170,120,40);
