@@ -14,7 +14,7 @@ public class RankUI extends JFrame implements ActionListener{
     Database d;
     JButton selJB = new JButton("加载");
     JComboBox<String> modleSel = new JComboBox<>(new String[] {"金币排行", "闯关排行"});
-    JComboBox<String> levSel = new JComboBox<>(new String[] {"level1", "level2","level3"});
+    JComboBox<String> levSel = new JComboBox<>(new MapUtil(9,12).getLevelList());
     JScrollPane moneyJSP;
     JTable moneyT;
     JScrollPane levelJSP;
@@ -30,6 +30,7 @@ public class RankUI extends JFrame implements ActionListener{
         this.setVisible(true);
     }
     private void initModTable() {
+
         levelT = new JTable(new DefaultTableModel(0, 5));
         DefaultTableModel model = (DefaultTableModel) levelT.getModel();
         String[] columns = {"序号", "账号", "花费时间", "使用金币", "通关日期"};
@@ -79,15 +80,19 @@ public class RankUI extends JFrame implements ActionListener{
         levSel.setVisible(false);
         selJB.setBounds(10,45,350,30);
         selJB.setFont(new Font("宋体",Font.BOLD,15));
+
         this.getContentPane().add(jlb1);
         this.getContentPane().add(modleSel);
         this.getContentPane().add(jlb2);
         this.getContentPane().add(levSel);
         this.getContentPane().add(selJB);
+
         selJB.addActionListener(this);
+
         modleSel.addActionListener(e -> {
             JComboBox<String> combo = (JComboBox<String>) e.getSource();
             String selectedValue = (String) combo.getSelectedItem();
+
             if(selectedValue.equals("闯关排行")){
                 levelJSP.setVisible(true);
                 moneyJSP.setVisible(false);
@@ -99,6 +104,7 @@ public class RankUI extends JFrame implements ActionListener{
                 jlb2.setVisible(false);
                 levSel.setVisible(false);
             }
+
             System.out.println("选中的选项: " + selectedValue);
         });
     }
@@ -108,16 +114,17 @@ public class RankUI extends JFrame implements ActionListener{
         this.setTitle("排行榜");
         this.setLocationRelativeTo(null);//居中
         this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);//关闭模式设置
+
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                JOptionPane.showMessageDialog(null,"将要关闭窗口");
-                System.exit(0);
-//                dispose();
+//                JOptionPane.showMessageDialog(null,"将要关闭窗口");
+//                System.exit(0);
+                dispose();
+                new modeSel(d);
             }
         });
         this.setLayout(null);//清除格式
-
     }
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
@@ -129,18 +136,22 @@ public class RankUI extends JFrame implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
+
         if(o==selJB){
             String mod = modleSel.getItemAt(modleSel.getSelectedIndex());
             String lev = levSel.getItemAt(levSel.getSelectedIndex());
             String data = "";
             DefaultTableModel model;
+
             if(mod.equals("闯关排行")){
+
                 data = d.getGameRank(lev);
                 String[] dataP = data.split("\\|");
                 model = (DefaultTableModel) levelT.getModel();
                 while (model.getRowCount()>0){
                     model.removeRow(0);
                 }
+
                 for (int i = 0; i < dataP.length && !dataP[i].isEmpty(); i++) {
                     String[] dataS = dataP[i].split("&");
                     String[] rslt = new String[5];
@@ -149,16 +160,17 @@ public class RankUI extends JFrame implements ActionListener{
                         rslt[j+1] = dataS[j];
                     }
                     model.addRow(rslt);
-
                 }
-
             }else if(mod.equals("金币排行")){
+
                 model = (DefaultTableModel) moneyT.getModel();
                 while (model.getRowCount()>0){
                     model.removeRow(0);
                 }
+
                 data = d.getMoneyRank();
                 String[] dataP = data.split("\\|");
+
                 for (int i = 0; i < dataP.length; i++) {
                     String[] dataS = dataP[i].split("&");
                     String[] rslt = new String[3];
@@ -167,7 +179,6 @@ public class RankUI extends JFrame implements ActionListener{
                         rslt[j+1] = dataS[j];
                     }
                     model.addRow(rslt);
-
                 }
             }
             System.out.println(data);
