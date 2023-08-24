@@ -97,7 +97,7 @@ public class LoginUI extends JFrame implements ActionListener {
 
             if(login_state==200){
                 new modeSel(d);
-                dispose();
+                this.dispose();
                 //进入下一界面
             }else if(login_state==-1){
                 JOptionPane.showMessageDialog(null,"账号不存在！");
