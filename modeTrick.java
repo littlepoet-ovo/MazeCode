@@ -3,6 +3,7 @@ package com.sdxf.game;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,9 +30,11 @@ public class modeTrick extends JFrame {
 
         //标签设计
         JButton back=new JButton();
+        back.setBorder(BorderFactory.createRaisedBevelBorder());//设置按钮突出
         //设置返回图标
-        ImageIcon imaReturn = new ImageIcon("src/image/return2.jpg"); // Icon由图片文件形成
-        Image image = imaReturn.getImage(); // 但这个图片太大不适合做Icon
+        URL url = Main.class.getResource("/image/return2.jpg");
+        ImageIcon icon = new ImageIcon(url);//加载图像文件到ImageIcon对象中
+        Image image = icon.getImage(); // 但这个图片太大不适合做Icon
         // 为把它缩小点，先要取出这个Icon的image ,然后缩放到合适的大小
         Image smallImage = image.getScaledInstance(75, 55, Image.SCALE_FAST);
         // 再由修改后的Image来生成合适的Icon
@@ -57,11 +60,14 @@ public class modeTrick extends JFrame {
         levels.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                String s=levels.getSelectedValue().toString();
-                String itemName =s.substring(1,s.length()-1);
-                int currIndex=levels.getSelectedIndex();
-                int sumIndex=levels.getModel().getSize();
-                new GameUI(d,1,itemName,currIndex,sumIndex);
+                if(e.getClickCount()==1) {
+                    String s = levels.getSelectedValue().toString();
+                    String itemName = s.substring(1, s.length() - 1);
+                    int currIndex = levels.getSelectedIndex();
+                    int sumIndex = levels.getModel().getSize();
+                    new GameUI(d, 1, itemName, currIndex, sumIndex);
+                    dispose();
+                }
             }
         });
 
