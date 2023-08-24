@@ -1,6 +1,5 @@
 package com.sdxf.game;
 
-import jdk.nashorn.internal.scripts.JO;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
