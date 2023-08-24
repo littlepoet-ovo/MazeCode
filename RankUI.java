@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.URL;
 import java.sql.SQLException;
 
 public class RankUI extends JFrame implements ActionListener{
@@ -28,6 +29,17 @@ public class RankUI extends JFrame implements ActionListener{
         levelJSP.setVisible(false);
         //setFont(new Font("宋体",Font.BOLD,15));
         this.setVisible(true);
+        //给窗口加上背景图片
+        JLabel backGround = new JLabel();
+        URL url = Main.class.getResource("/image/Back1.jpg");
+        ImageIcon icon = new ImageIcon(url);//加载图像文件到ImageIcon对象中
+        backGround.setIcon(icon);//将ImageIcon设置成JLabel的图标
+        JPanel imPanel=(JPanel) this.getContentPane();//注意内容面板必须强转为JPanel才可以实现下面的设置透明
+        imPanel.setOpaque(false);//将内容面板设为透明
+        backGround.setBounds(0, 0, this.getWidth(), this.getHeight());//设置标签位置大小，记得大小要和窗口一样大
+        icon.setImage(icon.getImage().getScaledInstance(backGround.getWidth(), backGround.getHeight(), Image.SCALE_DEFAULT));//图片自适应标签大小
+        this.getLayeredPane().add(backGround, Integer.valueOf(Integer.MIN_VALUE));//标签添加到层面板
+        this.add(backGround);
     }
     private void initModTable() {
 
@@ -63,23 +75,26 @@ public class RankUI extends JFrame implements ActionListener{
 
     private void initHead() {
         JLabel jlb1 = new JLabel("排行榜类型:");
-        jlb1.setFont(new Font("宋体",Font.BOLD,15));
-        jlb1.setBounds(10,10,90,30);
+        jlb1.setFont(new Font("华文新魏",Font.BOLD,20));
+        jlb1.setBounds(10,10,150,30);
 
         modleSel.setSelectedItem("金币排行"); // 设置默认选择
-        modleSel.setBounds(105,10,90,30);
-        modleSel.setFont(new Font("宋体",Font.BOLD,15));
+        modleSel.setBounds(125,10,150,30);
+        modleSel.setFont(new Font("华文新魏",Font.BOLD,20));
 
         JLabel jlb2 = new JLabel("关卡类型：");
-        jlb2.setFont(new Font("宋体",Font.BOLD,15));
-        jlb2.setBounds(200,10,80,30);
+        jlb2.setFont(new Font("华文新魏",Font.BOLD,20));
+        jlb2.setBounds(200,10,100,30);
 
         levSel.setBounds(270,10,90,30);
-        levSel.setFont(new Font("宋体",Font.BOLD,15));
+        levSel.setFont(new Font("华文行楷",Font.BOLD,20));
         jlb2.setVisible(false);
         levSel.setVisible(false);
         selJB.setBounds(10,45,350,30);
-        selJB.setFont(new Font("宋体",Font.BOLD,15));
+        selJB.setFont(new Font("华文新魏",Font.BOLD,25));
+        selJB.setBorder(BorderFactory.createRaisedBevelBorder());//设置按钮突出
+        selJB.setContentAreaFilled(false); //按钮设置为透明，这样就不会挡着后面的背景
+        selJB.setBackground(Color.orange);//设置按钮颜色
 
         this.getContentPane().add(jlb1);
         this.getContentPane().add(modleSel);
