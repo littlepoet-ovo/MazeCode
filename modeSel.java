@@ -8,12 +8,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.net.URL;
 
 public class modeSel extends JFrame {
     Database d;
-
+    Clip clip;
     public modeSel(Database d) {
+
         this.d = d;
         //数据库调用显示
         String userName = d.getUsername();
@@ -22,8 +25,6 @@ public class modeSel extends JFrame {
         //窗口设计
         setTitle("迷宫游戏 - 游戏模式 - "+userName);
         setDefaultCloseOperation(this.EXIT_ON_CLOSE);//结束程序
-
-
 
         setLayout(null);
         setSize(500, 700);
@@ -46,6 +47,7 @@ public class modeSel extends JFrame {
         laTitle.setBounds(165, 90, 150, 50);//设置标签位置及大小
         laTitle.setFont(new Font("华文彩云", Font.BOLD, 35));//设置标签字体及大小
 
+        //用户图标
         url = Main.class.getResource("/image/user1.jpg");
         ImageIcon  iname= new ImageIcon(url); // Icon由图片文件形成
         Image mage = iname.getImage(); // 但这个图片太大不适合做Icon
@@ -54,10 +56,11 @@ public class modeSel extends JFrame {
         // 再由修改后的Image来生成合适的Icon
         ImageIcon smallIco = new ImageIcon(smallImag);
         JLabel laName = new JLabel(userName,smallIco,JLabel.CENTER);
-        laName.setBounds(40, 5, 150, 50);
+        laName.setBounds(20, 5, 180, 50);
         laName.setFont(new Font("华文新魏", Font.BOLD, 25));
 //        laName.setForeground(Color.cyan);//设置标签字体颜色
 
+        //金钱图标
         url = Main.class.getResource("/image/money4.jpg");
         ImageIcon imoney = new ImageIcon(url); // Icon由图片文件形成
         Image image = imoney.getImage(); // 但这个图片太大不适合做Icon
@@ -74,7 +77,7 @@ public class modeSel extends JFrame {
         btnModel.setFont(new Font("华文新魏", Font.BOLD, 35));
         btnModel.setContentAreaFilled(false);//按钮设置为透明，这样就不会挡着后面的背景
         btnModel.setBorder(BorderFactory.createRaisedBevelBorder());
-        //   btnModel.setBorderPainted(false);//按钮边框
+     //   btnModel.setBorderPainted(false);//按钮边框
         btnModel.setBackground(Color.orange);//设置按钮颜色
 
         JButton btnTrick = new JButton("趣味闯关");
@@ -98,44 +101,74 @@ public class modeSel extends JFrame {
         btnExit.setContentAreaFilled(false);
         btnExit.setBorder(BorderFactory.createRaisedBevelBorder());
 
-        JButton btnPlay=new JButton();
-        btnPlay.setBounds(350, 60,100,100);
-        btnPlay.setContentAreaFilled(false);
-        btnPlay.setBorder(BorderFactory.createRaisedBevelBorder());
-        //设置音乐图标
-        url = Main.class.getResource("/image/pause1.jpg");
-        ImageIcon imaReturn = new ImageIcon(url); // Icon由图片文件形成
-        Image image1 = imaReturn.getImage(); // 但这个图片太大不适合做Icon
-        // 为把它缩小点，先要取出这个Icon的image ,然后缩放到合适的大小
-        Image smallImage1 = image1.getScaledInstance(50, 50, Image.SCALE_AREA_AVERAGING);
-        // 再由修改后的Image来生成合适的Icon
-        ImageIcon smallIcon = new ImageIcon(smallImage1);
-        // 最后设置它为按钮的图片
-        btnPlay.setIcon(smallIcon);
+//        //播放音乐图标
+//        JButton btnStart=new JButton();
+//        btnStart.setBounds(420, 80,50,50);
+//        btnStart.setContentAreaFilled(false);
+//        btnStart.setBorder(BorderFactory.createRaisedBevelBorder());
+//        url = Main.class.getResource("/image/pause1.jpg");
+//        ImageIcon imReturn = new ImageIcon(url); // Icon由图片文件形成
+//        Image imag = imReturn.getImage(); // 但这个图片太大不适合做Icon
+//        // 为把它缩小点，先要取出这个Icon的image ,然后缩放到合适的大小
+//        Image smallIma = imag.getScaledInstance(50, 50, Image.SCALE_AREA_AVERAGING);
+//        // 再由修改后的Image来生成合适的Icon
+//        ImageIcon smallIc = new ImageIcon(smallIma);
+//        // 最后设置它为按钮的图片
+//        btnStart.setIcon(smallIc);
+//
+//        //停止音乐图标
+//        JButton btnStop=new JButton();
+//        btnStop.setBounds(420, 80,50,50);
+//        btnStop.setContentAreaFilled(false);
+//        btnStop.setBorder(BorderFactory.createRaisedBevelBorder());
+//        url = Main.class.getResource("/image/continue.jpg");
+//        ImageIcon imaReturn = new ImageIcon(url); // Icon由图片文件形成
+//        Image image1 = imaReturn.getImage(); // 但这个图片太大不适合做Icon
+//        // 为把它缩小点，先要取出这个Icon的image ,然后缩放到合适的大小
+//        Image smallImage1 = image1.getScaledInstance(50, 50, Image.SCALE_AREA_AVERAGING);
+//        // 再由修改后的Image来生成合适的Icon
+//        ImageIcon smallIcon = new ImageIcon(smallImage1);
+//        // 最后设置它为按钮的图片
+//        btnStop.setIcon(smallIcon);
 
-        JButton btnStop=new JButton();
-        btnPlay.setBounds(350, 60,100,100);
-        btnPlay.setContentAreaFilled(false);
-        btnPlay.setBorder(BorderFactory.createRaisedBevelBorder());
-        //设置音乐图标
-        url = Main.class.getResource("/image/pause1.jpg");
-        ImageIcon imReturn = new ImageIcon(url); // Icon由图片文件形成
-        Image image2 = imReturn.getImage(); // 但这个图片太大不适合做Icon
-        // 为把它缩小点，先要取出这个Icon的image ,然后缩放到合适的大小
-        Image smallImage2 = image2.getScaledInstance(50, 50, Image.SCALE_AREA_AVERAGING);
-        // 再由修改后的Image来生成合适的Icon
-        ImageIcon smallIcon2 = new ImageIcon(smallImage2);
-        // 最后设置它为按钮的图片
-        btnStop.setIcon(smallIcon2);
-//        btnPlay.addActionListener(new ActionListener() {
+//        //播放音乐（窗口打开时）
+//        addWindowListener(new WindowAdapter() {
 //            @Override
-//            public void actionPerformed(ActionEvent e) {
+//            public void windowOpened(WindowEvent e) {
 //                playMusic();
-//                add(btnStop);
+//                //只能不播放
+//                btnStop.setVisible(false);
+//                btnStop.setEnabled(false);
 //            }
 //        });
 
-        //退出事件响应
+//        //播放音乐开始按钮
+//        btnStart.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                stopMusic();
+//                //只能不播放
+//                btnStart.setEnabled(false);
+//                btnStart.setVisible(false);
+//                btnStop.setVisible(true);
+//                btnStop.setEnabled(true);
+//            }
+//        });
+//
+//        //停止播放
+//        btnStop.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                playMusic();
+//                //只能播放
+//                btnStart.setVisible(true);
+//                btnStop.setVisible(false);
+//                btnStart.setEnabled(true);
+//                btnStop.setEnabled(false);
+//            }
+//        });
+
+        //排行榜
         btnRank.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -144,6 +177,7 @@ public class modeSel extends JFrame {
             }
         });
 
+        //退出事件响应
         btnExit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -154,6 +188,7 @@ public class modeSel extends JFrame {
             }
         });
 
+        //娱乐模式
         btnModel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -162,6 +197,7 @@ public class modeSel extends JFrame {
             }
         });
 
+        //闯关模式
         btnTrick.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -177,26 +213,37 @@ public class modeSel extends JFrame {
         add(btnTrick);
         add(btnRank);
         add(btnExit);
-        add(btnPlay);
 
         setVisible(true);
     }
 
-    public void playMusic(){
-        try {
-            // 加载音乐文件
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource("/music/刘晨 - 我还有点小糊涂 (片段版伴奏).mp3"));
+//    //背景音乐播放
+//    public void playMusic(){
+//        try {
+//            // 加载音乐文件
+//            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource("/music/刘晨 - 我还有点小糊涂 (片段版伴奏).wav"));
+//
+//            // 创建音频剪辑
+//            clip = AudioSystem.getClip();
+//
+//            // 打开音频剪辑并开始播放
+//            clip.open(audioInputStream);
+//            clip.start();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    //停止播放
+//    public void stopMusic(){
+//        System.out.println(1);
+//        if (clip != null && clip.isRunning()) {
+//            System.out.println(2);
+//            clip.stop();
+//            clip.close();
+//        }
+//    }
 
-            // 创建音频剪辑
-            Clip clip = AudioSystem.getClip();
-
-            // 打开音频剪辑并开始播放
-            clip.open(audioInputStream);
-            clip.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
     public static void main(String[] args) {
         new modeSel(new Database());
     }
