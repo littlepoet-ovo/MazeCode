@@ -38,12 +38,12 @@ public class RegisterUI extends JFrame implements ActionListener {
         JPanel pane=new JPanel();
         pane.setLayout(null);
 
-        URL url=Main.class.getResource("/image/account.jpeg");
+        URL url=Main.class.getResource("/image/account2.png");
         ImageIcon icon=new ImageIcon(url);
         icon.setImage(icon.getImage().getScaledInstance(25,25,Image.SCALE_DEFAULT));
         account_icon.setIcon(icon);
 
-        url=Main.class.getResource("/image/password.jpeg");
+        url=Main.class.getResource("/image/password2.png");
         icon=new ImageIcon(url);
         icon.setImage(icon.getImage().getScaledInstance(25,25,Image.SCALE_DEFAULT));
         password_icon.setIcon(icon);
