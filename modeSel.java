@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 
 public class modeSel extends JFrame {
     Database d;
@@ -27,7 +28,8 @@ public class modeSel extends JFrame {
 
         //给窗口加上背景图片
         JLabel backGround = new JLabel();
-        ImageIcon icon = new ImageIcon("src/image/Back1.jpg");//加载图像文件到ImageIcon对象中
+        URL url = Main.class.getResource("/image/Back1.jpg");
+        ImageIcon icon = new ImageIcon(url);//加载图像文件到ImageIcon对象中
         backGround.setIcon(icon);//将ImageIcon设置成JLabel的图标
         JPanel imPanel=(JPanel) this.getContentPane();//注意内容面板必须强转为JPanel才可以实现下面的设置透明
         imPanel.setOpaque(false);//将内容面板设为透明
@@ -45,8 +47,8 @@ public class modeSel extends JFrame {
         laName.setBounds(40, 0, 150, 50);
         laName.setFont(new Font("华文新魏", Font.BOLD, 25));
 //        laName.setForeground(Color.cyan);//设置标签字体颜色
-
-        ImageIcon imoney = new ImageIcon("src/image/money.jpg"); // Icon由图片文件形成
+        url = Main.class.getResource("/image/money.jpg");
+        ImageIcon imoney = new ImageIcon(url); // Icon由图片文件形成
         Image image = imoney.getImage(); // 但这个图片太大不适合做Icon
         // 为把它缩小点，先要取出这个Icon的image ,然后缩放到合适的大小
         Image smallImage = image.getScaledInstance(70, 55, Image.SCALE_FAST);
