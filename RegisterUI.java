@@ -57,7 +57,7 @@ public class RegisterUI extends JFrame implements ActionListener {
         password_jlb.setBounds(50,90,60,50);
         password_jlb.setFont(new Font("华文行楷",Font.BOLD,25));
         password_jtf.setBounds(100,100,220,30);
-        password_jtf.setFont(new Font("华文新魏",Font.BOLD,20));
+//        password_jtf.setFont(new Font("华文新魏",Font.BOLD,20));
 
         register_btn.setBounds(70,170,120,40);
         back_btn.setBounds(220,170,120,40);
