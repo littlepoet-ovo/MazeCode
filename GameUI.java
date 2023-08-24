@@ -21,13 +21,14 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
     private JMenuItem backJMI;
     private String nowLevel;// 传入的关卡名称
     private JLabel timeJLB = new JLabel("05:00");
-    private int sumS; // 游戏时间限制（秒）
+    private int sumS = 500; // 游戏时间限制（秒）
     private ScheduledExecutorService scheduler;
     private boolean isRuning = true; //游戏是否运行中
     private JPanel stop = new JPanel();
     private GamePanel start;//游戏主体，参数传入
     private JButton exitJBT = new JButton("退出");
     private JButton stopJBT = new JButton("暂停");
+    JLabel levelJLB;
     JLabel moneyJLB;
     int currIndex,sumIndex;
 
@@ -51,8 +52,11 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
     }
 
     public void LoadMap(String level){
+        currIndex = Integer.parseInt(level);
+        System.out.println(level);
         this.sourceMoney = d.getMoney();
         moneyJLB.setText(String.format("金币：%d", this.sourceMoney));
+        levelJLB.setText(this.nowLevel);
         sumS = 300;
         useMoney = 0;
         if(this.start!=null){
@@ -117,11 +121,11 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
         if (mode == 1) title = "闯关模式";
         else title = "娱乐模式";
         JLabel jlb1 = new JLabel(title);
-        JLabel jlb2 = new JLabel(this.nowLevel);
+        levelJLB = new JLabel(this.nowLevel);
         jlb1.setFont(new Font("黑体", Font.BOLD, 30));
         jlb1.setBounds(330, 20, 150, 50);
-        jlb2.setFont(new Font("黑体", Font.BOLD, 25));
-        jlb2.setBounds(460, 20, 150, 50);
+        levelJLB.setFont(new Font("黑体", Font.BOLD, 25));
+        levelJLB.setBounds(460, 20, 150, 50);
         this.sourceMoney = d.getMoney();
         moneyJLB = new JLabel(String.format("金币：%d", this.sourceMoney));
         moneyJLB.setFont(new Font("宋体", Font.BOLD, 15));
@@ -134,7 +138,7 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
         }
 
         this.getContentPane().add(jlb1);
-        this.getContentPane().add(jlb2);
+        this.getContentPane().add(levelJLB);
         this.getContentPane().add(moneyJLB);
 
     }
@@ -219,13 +223,16 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
         int result=JOptionPane.showConfirmDialog(this, "真是个聪明蛋！奖励10个金币，再来一局吧！","提示", JOptionPane.YES_NO_OPTION);
         if(result==JOptionPane.YES_OPTION) {
             if(mode==1){
+                System.out.println("当前关卡"+currIndex+"总关卡"+sumIndex);
                 if(currIndex==sumIndex){
                     JOptionPane.showMessageDialog(this,"你已经完成了所有关卡了，即将退出此界面");
                     this.dispose();
                     new modeTrick(d);
                 }
                 else {
-                    LoadMap(String.valueOf(currIndex+1));
+                    nowLevel = String.format("%d",Integer.parseInt(nowLevel)+1);
+                    System.out.println(nowLevel);
+                    LoadMap(nowLevel);
                 }
 
             }
