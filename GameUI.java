@@ -20,8 +20,8 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
     private JMenuItem restarJMI;
     private JMenuItem backJMI;
     private String nowLevel;// 传入的关卡名称
-    private JLabel timeJLB = new JLabel("300:00");
-    private int sumS = 300; // 游戏时间限制（秒）
+    private JLabel timeJLB = new JLabel("05:00");
+    private int sumS; // 游戏时间限制（秒）
     private ScheduledExecutorService scheduler;
     private boolean isRuning = true; //游戏是否运行中
     private JPanel stop = new JPanel();
@@ -44,17 +44,27 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
         if (mode == 1) {
             initTime();
         }
-        LoadMap();
+        LoadMap(nowLevel);
         initJPanel();
         initButton();
         setVisible(true);
     }
 
-    public void LoadMap(){
-        System.out.println("yes");
-        this.start = new GamePanel(d, 9, 12, this, mode, nowLevel);
-        start.Focus();
+    public void LoadMap(String level){
+        this.sourceMoney = d.getMoney();
+        moneyJLB.setText(String.format("金币：%d", this.sourceMoney));
+        sumS = 300;
+        useMoney = 0;
+        if(this.start!=null){
+            this.remove(this.start);
+        }
+        this.start = new GamePanel(d, 9, 12, this, mode, level);
+        this.getContentPane().add(this.start);
         this.repaint();
+        isRuning = true;
+        start.setVisible(false);
+        start.setVisible(true);
+        start.requestFocus();
     }
 
     private void initButton() {
@@ -81,7 +91,6 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
         // 将边框应用到JPanel
         stop.setBorder(blackBorder);
         this.getContentPane().add(stop);
-        this.getContentPane().add(start);
         stop.setVisible(false);
     }
 
@@ -130,19 +139,6 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
 
     }
 
-//    private void initJMB() {
-//        JMenuBar JMB = new JMenuBar();
-//        JMenu sel = new JMenu("选择");
-//        restarJMI = new JMenuItem("重新开始");
-//        backJMI = new JMenuItem("返回主界面");
-//        restarJMI.addActionListener(this);
-//        backJMI.addActionListener(this);
-//        sel.add(restarJMI);
-//        sel.add(backJMI);
-//        JMB.add(sel);
-//        this.setJMenuBar(JMB);
-//    }
-
     private void initJFrame() {
         this.setSize(800, 780);
         String title;
@@ -177,12 +173,12 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
         } else if (o == stopJBT) {
             System.out.println("点击了暂停按钮");
             if (isRuning) {
-                start.Focus();
                 isRuning = false;
                 start.setVisible(false);
                 stop.setVisible(true);
                 stopJBT.setText("继续");
             } else {
+                start.Focus();
                 isRuning = true;
                 start.setVisible(true);
                 stop.setVisible(false);
@@ -192,65 +188,60 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
     }
 
     private void closeApp() {
-        if (mode == 1) scheduler.shutdown();
-//        JOptionPane.showMessageDialog(null,"将要关闭窗口");
-//        System.exit(0);
+        if (mode == 1) {
+            scheduler.shutdown();
+            new modeTrick(d);
+        }else{
+            new modeSel(d);
+        }
         dispose();
+
     }
-
-//    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-//        Database d = new Database();
-//        d.link();
-//        System.out.println(d.login("zijie", "123456"));
-//        new GameUI(d, 0, "", currIndex);
-//    }
-
     @Override
     public void Winning(int money) {
-        int result=JOptionPane.showConfirmDialog(this, "真是个聪明蛋！再来一局吧！","提示", JOptionPane.YES_NO_OPTION);
-            System.out.println("游戏胜利！");
-            if (mode == 1) {
-                int ans = d.saveGameData(useTime, useMoney, nowLevel);
-                if (ans == 200) {
-                    System.out.println("运行成功");
-                } else if (ans == 201) {
-                    System.out.println("打破纪录");
-                } else {
-                    System.out.println("运行失败");
-                }
-                int ans1 = d.setMoney(money - useMoney);
-                if (ans1 == 200) {
-                    System.out.println("修改成功");
-                } else {
-                    System.out.println("改动失败，错误代码" + ans);
-                }
+        System.out.println("游戏胜利！");
+        if (mode == 1) {
+            int ans = d.saveGameData(useTime, useMoney, nowLevel);
+            if (ans == 200) {
+                System.out.println("运行成功");
+            } else if (ans == 201) {
+                System.out.println("打破纪录");
+            } else {
+                System.out.println("运行失败");
             }
-                if(result==JOptionPane.YES_OPTION) {
-                    if(mode==1){
-                        if(currIndex==sumIndex){
-                            JOptionPane.showMessageDialog(this,"你已经完成了所有关卡了，即将退出此界面");
-                            this.dispose();
-                            new modeTrick(d);
-                        }
-                        else {
-                            this.start=new GamePanel(d,9,12,this,1,String.valueOf(currIndex+1));
-                            start.requestFocus();
-                        }
-
-                    }
-                    else{
-                        LoadMap();
-                    }
-                }
-                else{
+        }
+        int ans1 = d.setMoney(money - useMoney);
+        if (ans1 == 200) {
+            System.out.println("修改成功");
+        } else {
+            System.out.println("改动失败，错误代码" + ans1);
+        }
+        int result=JOptionPane.showConfirmDialog(this, "真是个聪明蛋！奖励10个金币，再来一局吧！","提示", JOptionPane.YES_NO_OPTION);
+        if(result==JOptionPane.YES_OPTION) {
+            if(mode==1){
+                if(currIndex==sumIndex){
+                    JOptionPane.showMessageDialog(this,"你已经完成了所有关卡了，即将退出此界面");
                     this.dispose();
-                    if (mode == 0) {
-                        new modeSel(d);
-                    }
-                    else {
-                        new modeTrick(d);
-                    }
+                    new modeTrick(d);
                 }
+                else {
+                    LoadMap(String.valueOf(currIndex+1));
+                }
+
+            }
+            else{
+                LoadMap(nowLevel);
+            }
+        }
+        else{
+            this.dispose();
+            if (mode == 0) {
+                new modeSel(d);
+            }
+            else {
+                new modeTrick(d);
+            }
+        }
     }
 
     @Override
@@ -272,6 +263,8 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
             int result = JOptionPane.showConfirmDialog(this, "金币不够了哦，需要提供50金币继续游戏嘛！", "提示", JOptionPane.YES_NO_OPTION);
             if (result == JOptionPane.YES_OPTION) {
                 d.setMoney(50);
+                this.sourceMoney += 50;
+                moneyJLB.setText(String.format("金币：%d", this.sourceMoney-this.useMoney));
                 isRuning=true;
             } else {
                 this.dispose();
@@ -287,7 +280,7 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
             int result = JOptionPane.showConfirmDialog(this, "时间已经到了哦,再挑战一次吧？", "提示", JOptionPane.YES_NO_OPTION);
             d.setMoney(-1*useMoney-20);
             if(result==JOptionPane.YES_OPTION){
-                LoadMap();
+                LoadMap(nowLevel);
             }
             else {
                 this.dispose();
