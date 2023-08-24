@@ -1,6 +1,9 @@
 //ctrl+Alt+L 对齐代码
 package com.sdxf.game;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -20,11 +23,12 @@ public class modeSel extends JFrame {
         setTitle("迷宫游戏 - 游戏模式 - "+userName);
         setDefaultCloseOperation(this.EXIT_ON_CLOSE);//结束程序
 
-        setSize(500, 700);
+
 
         setLayout(null);
+        setSize(500, 700);
         setLocationRelativeTo(null);//窗口居中显示
-         setResizable(false);//设置窗口为不可缩放
+        setResizable(false);//设置窗口为不可缩放
 
         //给窗口加上背景图片
         JLabel backGround = new JLabel();
@@ -42,12 +46,19 @@ public class modeSel extends JFrame {
         laTitle.setBounds(165, 90, 150, 50);//设置标签位置及大小
         laTitle.setFont(new Font("华文彩云", Font.BOLD, 35));//设置标签字体及大小
 
-
-        JLabel laName = new JLabel("用户名：" + userName);
-        laName.setBounds(40, 0, 150, 50);
+        url = Main.class.getResource("/image/user1.jpg");
+        ImageIcon  iname= new ImageIcon(url); // Icon由图片文件形成
+        Image mage = iname.getImage(); // 但这个图片太大不适合做Icon
+        // 为把它缩小点，先要取出这个Icon的image ,然后缩放到合适的大小
+        Image smallImag = mage.getScaledInstance(70, 55, Image.SCALE_FAST);
+        // 再由修改后的Image来生成合适的Icon
+        ImageIcon smallIco = new ImageIcon(smallImag);
+        JLabel laName = new JLabel(userName,smallIco,JLabel.CENTER);
+        laName.setBounds(40, 5, 150, 50);
         laName.setFont(new Font("华文新魏", Font.BOLD, 25));
 //        laName.setForeground(Color.cyan);//设置标签字体颜色
-        url = Main.class.getResource("/image/money.jpg");
+
+        url = Main.class.getResource("/image/money4.jpg");
         ImageIcon imoney = new ImageIcon(url); // Icon由图片文件形成
         Image image = imoney.getImage(); // 但这个图片太大不适合做Icon
         // 为把它缩小点，先要取出这个Icon的image ,然后缩放到合适的大小
@@ -64,28 +75,65 @@ public class modeSel extends JFrame {
         btnModel.setContentAreaFilled(false);//按钮设置为透明，这样就不会挡着后面的背景
         btnModel.setBorder(BorderFactory.createRaisedBevelBorder());
      //   btnModel.setBorderPainted(false);//按钮边框
-        btnModel.setBackground(Color.orange);//设置标签颜色
+        btnModel.setBackground(Color.orange);//设置按钮颜色
 
         JButton btnTrick = new JButton("趣味闯关");
         btnTrick.setBounds(141, 345, 200, 80);
         btnTrick.setFont(new Font("华文新魏", Font.BOLD, 35));
         btnTrick.setBorder(BorderFactory.createRaisedBevelBorder());//设置按钮突出
         btnTrick.setContentAreaFilled(false); //按钮设置为透明，这样就不会挡着后面的背景
-        btnTrick.setBackground(Color.orange);//设置标签颜色
+        btnTrick.setBackground(Color.orange);//设置按钮颜色
 
         JButton btnRank = new JButton("排行榜");
-        btnRank.setBounds(100, 480, 120, 50);
+        btnRank.setBounds(100, 490, 120, 50);
         btnRank.setFont(new Font("华文行楷", Font.BOLD, 25));
         btnRank.setContentAreaFilled(false); //按钮设置为透明，这样就不会挡着后面的背景
         btnRank.setBorder(BorderFactory.createRaisedBevelBorder());//设置按钮突出
 
         JButton btnExit = new JButton("退出");
-        btnExit.setBounds(285, 480, 120, 50);
+        btnExit.setBounds(285, 490, 120, 50);
         btnExit.setFont(new Font("华文行楷", Font.BOLD, 25));
 //        btnExit.setBackground(Color.green);
         //按钮设置为透明，这样就不会挡着后面的背景
         btnExit.setContentAreaFilled(false);
         btnExit.setBorder(BorderFactory.createRaisedBevelBorder());
+
+        JButton btnPlay=new JButton();
+        btnPlay.setBounds(350, 60,100,100);
+        btnPlay.setContentAreaFilled(false);
+        btnPlay.setBorder(BorderFactory.createRaisedBevelBorder());
+        //设置音乐图标
+        url = Main.class.getResource("/image/pause1.jpg");
+        ImageIcon imaReturn = new ImageIcon(url); // Icon由图片文件形成
+        Image image1 = imaReturn.getImage(); // 但这个图片太大不适合做Icon
+        // 为把它缩小点，先要取出这个Icon的image ,然后缩放到合适的大小
+        Image smallImage1 = image1.getScaledInstance(50, 50, Image.SCALE_AREA_AVERAGING);
+        // 再由修改后的Image来生成合适的Icon
+        ImageIcon smallIcon = new ImageIcon(smallImage1);
+        // 最后设置它为按钮的图片
+        btnPlay.setIcon(smallIcon);
+
+        JButton btnStop=new JButton();
+        btnPlay.setBounds(350, 60,100,100);
+        btnPlay.setContentAreaFilled(false);
+        btnPlay.setBorder(BorderFactory.createRaisedBevelBorder());
+        //设置音乐图标
+        url = Main.class.getResource("/image/pause1.jpg");
+        ImageIcon imReturn = new ImageIcon(url); // Icon由图片文件形成
+        Image image2 = imReturn.getImage(); // 但这个图片太大不适合做Icon
+        // 为把它缩小点，先要取出这个Icon的image ,然后缩放到合适的大小
+        Image smallImage2 = image2.getScaledInstance(50, 50, Image.SCALE_AREA_AVERAGING);
+        // 再由修改后的Image来生成合适的Icon
+        ImageIcon smallIcon2 = new ImageIcon(smallImage2);
+        // 最后设置它为按钮的图片
+        btnStop.setIcon(smallIcon2);
+//        btnPlay.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                playMusic();
+//                add(btnStop);
+//            }
+//        });
 
         //退出事件响应
         btnRank.addActionListener(new ActionListener() {
@@ -129,8 +177,25 @@ public class modeSel extends JFrame {
         add(btnTrick);
         add(btnRank);
         add(btnExit);
+        add(btnPlay);
 
         setVisible(true);
+    }
+
+    public void playMusic(){
+        try {
+            // 加载音乐文件
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource("/music/刘晨 - 我还有点小糊涂 (片段版伴奏).mp3"));
+
+            // 创建音频剪辑
+            Clip clip = AudioSystem.getClip();
+
+            // 打开音频剪辑并开始播放
+            clip.open(audioInputStream);
+            clip.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     public static void main(String[] args) {
         new modeSel(new Database());
