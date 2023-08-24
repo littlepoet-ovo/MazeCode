@@ -1,5 +1,8 @@
 package com.sdxf.game;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -7,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.URL;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -31,6 +35,8 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
     JLabel levelJLB;
     JLabel moneyJLB;
     int currIndex,sumIndex;
+    URL url;
+    Clip clip;
 
     public GameUI(Database d, int mode, String levelName, int currIndex, int sumIndex) {
         this.nowLevel = levelName;
@@ -52,8 +58,10 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
     }
 
     public void LoadMap(String level){
-        currIndex = Integer.parseInt(level);
-        System.out.println(level);
+        if(mode==1) {
+            currIndex = Integer.parseInt(level);
+            System.out.println(level);
+        }
         this.sourceMoney = d.getMoney();
         moneyJLB.setText(String.format("金币：%d", this.sourceMoney));
         levelJLB.setText(this.nowLevel);
@@ -74,17 +82,95 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
     private void initButton() {
         exitJBT.setBounds(80, 640, 200, 50);
         stopJBT.setBounds(500, 640, 200, 50);
-        exitJBT.setFont(new Font("宋体", Font.BOLD, 15));
-        stopJBT.setFont(new Font("宋体", Font.BOLD, 15));
+
+        exitJBT.setFont(new Font("华文新魏", Font.BOLD, 35));
+        exitJBT.setContentAreaFilled(false);//按钮设置为透明，这样就不会挡着后面的背景
+        exitJBT.setBorder(BorderFactory.createRaisedBevelBorder());
+        exitJBT.setBackground(Color.cyan);//设置按钮颜色
+//        exitJBT.setFont(new Font("宋体", Font.BOLD, 15));
+//        stopJBT.setFont(new Font("宋体", Font.BOLD, 15));
+
+        stopJBT.setFont(new Font("华文新魏", Font.BOLD, 35));
+        stopJBT.setContentAreaFilled(false);//按钮设置为透明，这样就不会挡着后面的背景
+        stopJBT.setBorder(BorderFactory.createRaisedBevelBorder());
+        stopJBT.setBackground(Color.cyan);//设置按钮颜色
+
         exitJBT.addActionListener(this);
         stopJBT.addActionListener(this);
         this.getContentPane().add(exitJBT);
         this.getContentPane().add(stopJBT);
+
+
+        //播放音乐图标
+        JButton btnStart = new JButton();
+        btnStart.setBounds(420, 80, 50, 50);
+        btnStart.setContentAreaFilled(false);
+        btnStart.setBorder(BorderFactory.createRaisedBevelBorder());
+        url = Main.class.getResource("/image/pause1.jpg");
+        ImageIcon imReturn = new ImageIcon(url); // Icon由图片文件形成
+        Image imag = imReturn.getImage(); // 但这个图片太大不适合做Icon
+        // 为把它缩小点，先要取出这个Icon的image ,然后缩放到合适的大小
+        Image smallIma = imag.getScaledInstance(50, 50, Image.SCALE_AREA_AVERAGING);
+        // 再由修改后的Image来生成合适的Icon
+        ImageIcon smallIc = new ImageIcon(smallIma);
+        // 最后设置它为按钮的图片
+        btnStart.setIcon(smallIc);
+
+        //停止音乐图标
+        JButton btnStop = new JButton();
+        btnStop.setBounds(420, 80, 50, 50);
+        btnStop.setContentAreaFilled(false);
+        btnStop.setBorder(BorderFactory.createRaisedBevelBorder());
+        url = Main.class.getResource("/image/continue.jpg");
+        ImageIcon imaReturn = new ImageIcon(url); // Icon由图片文件形成
+        Image image1 = imaReturn.getImage(); // 但这个图片太大不适合做Icon
+        // 为把它缩小点，先要取出这个Icon的image ,然后缩放到合适的大小
+        Image smallImage1 = image1.getScaledInstance(50, 50, Image.SCALE_AREA_AVERAGING);
+        // 再由修改后的Image来生成合适的Icon
+        ImageIcon smallIcon = new ImageIcon(smallImage1);
+        // 最后设置它为按钮的图片
+        btnStop.setIcon(smallIcon);
+
+        //播放音乐（窗口打开时）
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+                playMusic();
+                //只能不播放
+                btnStop.setVisible(false);
+                btnStop.setEnabled(false);
+            }
+        });
+    }
+    //背景音乐播放
+    public void playMusic(){
+        try {
+            // 加载音乐文件
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource("/music/刘晨 - 我还有点小糊涂 (片段版伴奏).wav"));
+
+            // 创建音频剪辑
+            clip = AudioSystem.getClip();
+
+            // 打开音频剪辑并开始播放
+            clip.open(audioInputStream);
+            clip.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    //停止播放
+    public void stopMusic(){
+        System.out.println(1);
+        if (clip != null && clip.isRunning()) {
+            System.out.println(2);
+            clip.stop();
+            clip.close();
+        }
     }
 
     private void initJPanel() {
         JLabel jlb1 = new JLabel("游戏暂停中。。。");
-        jlb1.setFont(new Font("黑体", Font.BOLD, 40));
+        jlb1.setFont(new Font("华文新魏", Font.BOLD, 40));
         jlb1.setBounds(251, 150, 350, 50);
         stop.add(jlb1);
         stop.setBounds(10, 120, 765, 500);
@@ -108,7 +194,7 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
                 timeJLB.setText(String.format("%02d:%02d", tempM, tempS));
                 useTime++;
                 if (sumS <= 0) {
-                   isRuning=false;
+                    isRuning=false;
                     failed("time");
                 }
                 sumS--;
@@ -122,16 +208,16 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
         else title = "娱乐模式";
         JLabel jlb1 = new JLabel(title);
         levelJLB = new JLabel(this.nowLevel);
-        jlb1.setFont(new Font("黑体", Font.BOLD, 30));
+        jlb1.setFont(new Font("华文行楷", Font.BOLD, 30));
         jlb1.setBounds(330, 20, 150, 50);
-        levelJLB.setFont(new Font("黑体", Font.BOLD, 25));
+        levelJLB.setFont(new Font("华文行楷", Font.BOLD, 25));
         levelJLB.setBounds(460, 20, 150, 50);
         this.sourceMoney = d.getMoney();
         moneyJLB = new JLabel(String.format("金币：%d", this.sourceMoney));
-        moneyJLB.setFont(new Font("宋体", Font.BOLD, 15));
+        moneyJLB.setFont(new Font("华文行楷", Font.BOLD, 20));
         moneyJLB.setBounds(620, 80, 100, 30);
         if (mode == 1) {
-            timeJLB.setFont(new Font("宋体", Font.BOLD, 20));
+            timeJLB.setFont(new Font("华文行楷", Font.BOLD, 20));
             timeJLB.setBounds(400, 80, 100, 30);
             timeJLB.setForeground(Color.red);
             this.getContentPane().add(timeJLB);
@@ -158,6 +244,16 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
             }
         });
         this.setLayout(null);//清除格式
+
+        JLabel backGround = new JLabel();
+        URL url = Main.class.getResource("/image/Back1.jpg");
+        ImageIcon icon = new ImageIcon(url);//加载图像文件到ImageIcon对象中
+        backGround.setIcon(icon);//将ImageIcon设置成JLabel的图标
+        JPanel imPanel=(JPanel) this.getContentPane();//注意内容面板必须强转为JPanel才可以实现下面的设置透明
+        imPanel.setOpaque(false);//将内容面板设为透明
+        backGround.setBounds(0, 0, this.getWidth(), this.getHeight());//设置标签位置大小，记得大小要和窗口一样大
+        icon.setImage(icon.getImage().getScaledInstance(backGround.getWidth(), backGround.getHeight(), Image.SCALE_DEFAULT));//图片自适应标签大小
+        this.getLayeredPane().add(backGround, Integer.valueOf(Integer.MIN_VALUE));//标签添加到层面板
 
     }
 
@@ -192,6 +288,7 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
     }
 
     private void closeApp() {
+        stopMusic();
         if (mode == 1) {
             scheduler.shutdown();
             new modeTrick(d);
@@ -209,7 +306,7 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
             if (ans == 200) {
                 System.out.println("运行成功");
             } else if (ans == 201) {
-                System.out.println("打破纪录");
+                JOptionPane.showMessageDialog(this,"恭喜你！打破上一次的记录啦！");
             } else {
                 System.out.println("运行失败");
             }
