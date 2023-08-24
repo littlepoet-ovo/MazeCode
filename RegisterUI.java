@@ -105,14 +105,12 @@ public class RegisterUI extends JFrame implements ActionListener {
 
             if(register_state==200){
                 JOptionPane.showMessageDialog(null,"注册成功！,请返回登录");
-                this.dispose();
             }else {
                 JOptionPane.showMessageDialog(null,"注册失败！,账号名已存在");
             }
 
         } else if (e.getSource() == this.back_btn) {
             this.dispose();
-            new LoginUI(d);
         }
     }
 }
