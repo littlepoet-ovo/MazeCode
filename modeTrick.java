@@ -11,7 +11,13 @@ public class modeTrick extends JFrame {
         //String [] data={"1","2"};
         //窗口设计
         setTitle("迷宫游戏 - 闯关模式 - 关卡选择 - "+d.getUsername());
-        this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);//关闭模式设置
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                dispose();
+                new modeSel(d);
+            }
+        });
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
