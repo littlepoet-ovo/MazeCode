@@ -74,7 +74,7 @@ public class modeSel extends JFrame {
         btnModel.setFont(new Font("华文新魏", Font.BOLD, 35));
         btnModel.setContentAreaFilled(false);//按钮设置为透明，这样就不会挡着后面的背景
         btnModel.setBorder(BorderFactory.createRaisedBevelBorder());
-     //   btnModel.setBorderPainted(false);//按钮边框
+        //   btnModel.setBorderPainted(false);//按钮边框
         btnModel.setBackground(Color.orange);//设置按钮颜色
 
         JButton btnTrick = new JButton("趣味闯关");
