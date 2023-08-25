@@ -190,7 +190,7 @@ public class MapUtil {
         return array;
     }
 
-    public int [][] getRandomMap(int [][] map){
+     public int [][] getRandomMap(int [][] map){
        int[] dx={-1,1,0,0};
        int[] dy={0,0,-1,1};
        int row=map.length;
@@ -204,13 +204,13 @@ public class MapUtil {
                int ran=random.nextInt(100);
 
                int flag1=0,flag2=0,flag3=0,flag4=0;
-               if(map[i][j]==-2&&ran%9==1){
+               if(map[i][j]==-1&&ran%6==1){
                    for(int k=0;k<4;k++){
                        int x=i+dx[k];
                        int y=j+dy[k];
                        if (x < 1 || x >= row-1 || y< 1 || y >= col-1) continue;
 
-                       if(map[x][y]!=-2&&map[x][y]!=0){
+                       if(map[x][y]==-1){
                            if(k==0){
                                flag1=1;
                            }else if(k==1){
@@ -223,12 +223,20 @@ public class MapUtil {
                        }
                    }
                    if(flag1==1&&flag2==1&&flag3==0&&flag4==0||flag1==0&&flag2==0&&flag3==1&&flag4==1) map[i][j]=random.nextInt(9)+1;
+                   flag1=0;flag2=0;flag3=0;flag4=0;
                }
            }
        }
 
+//        for (int[] row1 : map) {
+//            for (int val : row1) {
+//                System.out.print(val + " ");
+//            }
+//            System.out.println();
+//        }
        return map;
     }
+    
     public int[][] getMap(){
         int[][] array1 = new int[2*row+1][2*col+1];
         //网格留空
