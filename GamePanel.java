@@ -11,8 +11,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class GamePanel extends JPanel{//游戏迷宫面板
+    private boolean[][] isPass = new boolean[19][25];
     GameRunningData grd;
     int[][] map;//游戏迷宫二维数组
     MapUtil mapUtil;
@@ -110,6 +115,7 @@ public class GamePanel extends JPanel{//游戏迷宫面板
         table.addKeyListener(new KeyListener() {
             public void keyPressed(KeyEvent e) {
                 moveKey(e.getKeyCode());
+                hideFun(e.getKeyCode());
             }
             public void keyTyped(KeyEvent e) {
             }
@@ -132,12 +138,6 @@ public class GamePanel extends JPanel{//游戏迷宫面板
     private void movePlayer() {
 
         if (isValidateMove(newRow, newColumn) == true) {//判断是否为障碍物
-            if(map[newRow][newColumn]>=1&&map[newRow][newColumn]<=9){
-                money=map[newRow][newColumn];
-                totalmoney+=money;
-                //传递收费站金额
-              grd.useMoney(money);
-            }
 
             // 更新玩家位置
             if (table.getValueAt(newRow, newColumn) == Color.black) {//返回黑色消失
@@ -149,7 +149,18 @@ public class GamePanel extends JPanel{//游戏迷宫面板
                 }
                 table.setValueAt(Color.orange,newRow, newColumn);
             }
-
+            if(map[newRow][newColumn]>=1&&map[newRow][newColumn]<=9){
+                if(isPass[newRow][newColumn]){// 收费站被通过
+                    isPass[newRow][newColumn] = false;
+                    table.setValueAt("", currentRow, currentColumn);
+                }else {
+                    isPass[newRow][newColumn] = true;
+                }
+                money=map[newRow][newColumn];
+                totalmoney+=money;
+                //传递收费站金额
+                grd.useMoney(money);
+            }
             //当到达终点时弹出对话框
             if (map[newRow][newColumn] == 0 && newRow ==18&& newColumn ==23 ) {
                 //传送总金额
@@ -199,7 +210,10 @@ public class GamePanel extends JPanel{//游戏迷宫面板
                     break;
             }
         }
-        movePlayer();
+        if(keyCode==KeyEvent.VK_UP || keyCode==KeyEvent.VK_DOWN || keyCode==KeyEvent.VK_LEFT || keyCode==KeyEvent.VK_RIGHT){
+            movePlayer();
+        }
+
 
     }
 
@@ -210,6 +224,67 @@ public class GamePanel extends JPanel{//游戏迷宫面板
             newColumn = col;
         }
         movePlayer();
+    }
+    private int cnt;
+    private PII[] ans = new PII[200];
+    private boolean isAuto;
+    private void hideFun(int keyCode){
+        if(keyCode == KeyEvent.VK_SHIFT && !isAuto){
+            isAuto = true;
+            System.out.println("激活作弊码");
+            int [][] d = new int[19][25];
+            PII [] q = new PII[625];
+            PII [][] prve = new PII[25][25];
+            int hh=0, tt=0;
+            q[0] = new PII(0,1);
+            for (int i = 0; i < 19; i++) {
+                for (int j = 0; j < 25; j++) {
+                    d[i][j] = -1;
+                }
+            }
+            int[] dx = {-1,0,1,0};
+            int[] dy = {0,1,0,-1};
+            while(hh <= tt){
+                PII t = q[hh++];
+                for(int i=0;i<4;i++){
+                    int x = t.x+dx[i], y=t.y+dy[i];
+                    if(x>=0 && x<19 && y>=0 && y<25 && map[x][y] != -2 && d[x][y]==-1){
+                        d[x][y] = d[t.x][t.y] + 1;
+                        prve[x][y] = t;
+                        q[++tt] = new PII(x,y);
+                    }
+
+                }
+            }
+            cnt = 0;
+            int x=18,y=23;
+            while(x>0 || y>1){
+                int tempx = prve[x][y].x;
+                int tempy = prve[x][y].y;
+                System.out.println(tempx+" "+tempy);
+                ans[cnt++] = new PII(x,y);
+//                table.setValueAt(Color.black, tempx, tempy);
+                x=tempx;
+                y=tempy;
+            }
+            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+            Runnable task = new Runnable() {
+                @Override
+                public void run() {
+                    int t = GamePanel.this.cnt-1;
+                    if(t>0){
+                        table.setValueAt(Color.yellow, ans[t].x, ans[t].y);
+                        GamePanel.this.cnt--;
+                    }else{
+                        scheduler.shutdown();
+                    }
+
+                }
+            };
+            // 初始延迟为0，之后每隔100毫秒执行一次任务
+            scheduler.scheduleAtFixedRate(task, 0, 50, TimeUnit.MILLISECONDS);
+        }
+
     }
 
 }
