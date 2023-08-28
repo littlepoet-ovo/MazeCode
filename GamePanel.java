@@ -137,25 +137,27 @@ public class GamePanel extends JPanel{//游戏迷宫面板
     //玩家移动
     private void movePlayer() {
 
-        if (isValidateMove(newRow, newColumn) == true) {//判断是否为障碍物
+        if (isValidateMove(newRow, newColumn)) {//判断是否为障碍物
 
             // 更新玩家位置
-            if (table.getValueAt(newRow, newColumn) == Color.black) {//返回黑色消失
+            if (table.getValueAt(newRow, newColumn) == Color.black || isPass[newRow][newColumn]) {//返回黑色消失
+                isPass[currentRow][currentColumn] = false;
                 table.setValueAt("", currentRow, currentColumn);
                 table.setValueAt(Color.orange,newRow,newColumn);
             } else  {
-                if(map[currentRow][currentColumn]==-1) {//前进路径变成黑色，自身变成黄色
+                if(map[currentRow][currentColumn]==-1 ) {//前进路径变成黑色，自身变成黄色
                     table.setValueAt(Color.black, currentRow, currentColumn);
                 }
                 table.setValueAt(Color.orange,newRow, newColumn);
+                isPass[currentRow][currentColumn] = true;
             }
             if(map[newRow][newColumn]>=1&&map[newRow][newColumn]<=9){
-                if(isPass[newRow][newColumn]){// 收费站被通过
-                    isPass[newRow][newColumn] = false;
-                    table.setValueAt("", currentRow, currentColumn);
-                }else {
-                    isPass[newRow][newColumn] = true;
-                }
+//                if(isPass[newRow][newColumn]){// 收费站被通过
+//                    isPass[newRow][newColumn] = false;
+//                    table.setValueAt("", currentRow, currentColumn);
+//                }else {
+//                    isPass[newRow][newColumn] = true;
+//                }
                 money=map[newRow][newColumn];
                 totalmoney+=money;
                 //传递收费站金额
@@ -173,7 +175,6 @@ public class GamePanel extends JPanel{//游戏迷宫面板
             //更新位置
             table.repaint();
         }
-
         //如果下一步是墙保持原来位置不变
         else if(isValidateMove(newRow, newColumn) == false){
             newRow = currentRow;
