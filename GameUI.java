@@ -34,7 +34,7 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
     private JButton stopJBT = new JButton("暂停");
     JLabel levelJLB;
     JLabel moneyJLB;
-    int currIndex,sumIndex;
+    int currIndex,sumIndex,flag=0;
     URL url;
     Clip clip;
 
@@ -58,6 +58,9 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
     }
 
     public void LoadMap(String level){
+        if(flag==1){
+            stopMusic();
+        }
         if(mode==1) {
             currIndex = Integer.parseInt(level);
             System.out.println(level);
@@ -77,6 +80,7 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
         start.setVisible(false);
         start.setVisible(true);
         start.requestFocus();
+        playMusic();
     }
 
     private void initButton() {
@@ -101,51 +105,52 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
         this.getContentPane().add(stopJBT);
 
 
-        //播放音乐图标
-        JButton btnStart = new JButton();
-        btnStart.setBounds(420, 80, 50, 50);
-        btnStart.setContentAreaFilled(false);
-        btnStart.setBorder(BorderFactory.createRaisedBevelBorder());
-        url = Main.class.getResource("/image/pause1.jpg");
-        ImageIcon imReturn = new ImageIcon(url); // Icon由图片文件形成
-        Image imag = imReturn.getImage(); // 但这个图片太大不适合做Icon
-        // 为把它缩小点，先要取出这个Icon的image ,然后缩放到合适的大小
-        Image smallIma = imag.getScaledInstance(50, 50, Image.SCALE_AREA_AVERAGING);
-        // 再由修改后的Image来生成合适的Icon
-        ImageIcon smallIc = new ImageIcon(smallIma);
-        // 最后设置它为按钮的图片
-        btnStart.setIcon(smallIc);
-
-        //停止音乐图标
-        JButton btnStop = new JButton();
-        btnStop.setBounds(420, 80, 50, 50);
-        btnStop.setContentAreaFilled(false);
-        btnStop.setBorder(BorderFactory.createRaisedBevelBorder());
-        url = Main.class.getResource("/image/continue.jpg");
-        ImageIcon imaReturn = new ImageIcon(url); // Icon由图片文件形成
-        Image image1 = imaReturn.getImage(); // 但这个图片太大不适合做Icon
-        // 为把它缩小点，先要取出这个Icon的image ,然后缩放到合适的大小
-        Image smallImage1 = image1.getScaledInstance(50, 50, Image.SCALE_AREA_AVERAGING);
-        // 再由修改后的Image来生成合适的Icon
-        ImageIcon smallIcon = new ImageIcon(smallImage1);
-        // 最后设置它为按钮的图片
-        btnStop.setIcon(smallIcon);
+//        //播放音乐图标
+//        JButton btnStart = new JButton();
+//        btnStart.setBounds(420, 80, 50, 50);
+//        btnStart.setContentAreaFilled(false);
+//        btnStart.setBorder(BorderFactory.createRaisedBevelBorder());
+//        url = Main.class.getResource("/image/pause1.jpg");
+//        ImageIcon imReturn = new ImageIcon(url); // Icon由图片文件形成
+//        Image imag = imReturn.getImage(); // 但这个图片太大不适合做Icon
+//        // 为把它缩小点，先要取出这个Icon的image ,然后缩放到合适的大小
+//        Image smallIma = imag.getScaledInstance(50, 50, Image.SCALE_AREA_AVERAGING);
+//        // 再由修改后的Image来生成合适的Icon
+//        ImageIcon smallIc = new ImageIcon(smallIma);
+//        // 最后设置它为按钮的图片
+//        btnStart.setIcon(smallIc);
+//
+//        //停止音乐图标
+//        JButton btnStop = new JButton();
+//        btnStop.setBounds(420, 80, 50, 50);
+//        btnStop.setContentAreaFilled(false);
+//        btnStop.setBorder(BorderFactory.createRaisedBevelBorder());
+//        url = Main.class.getResource("/image/continue.jpg");
+//        ImageIcon imaReturn = new ImageIcon(url); // Icon由图片文件形成
+//        Image image1 = imaReturn.getImage(); // 但这个图片太大不适合做Icon
+//        // 为把它缩小点，先要取出这个Icon的image ,然后缩放到合适的大小
+//        Image smallImage1 = image1.getScaledInstance(50, 50, Image.SCALE_AREA_AVERAGING);
+//        // 再由修改后的Image来生成合适的Icon
+//        ImageIcon smallIcon = new ImageIcon(smallImage1);
+//        // 最后设置它为按钮的图片
+//        btnStop.setIcon(smallIcon);
 
         //播放音乐（窗口打开时）
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowOpened(WindowEvent e) {
-                playMusic();
-                //只能不播放
-                btnStop.setVisible(false);
-                btnStop.setEnabled(false);
-            }
-        });
+//        addWindowListener(new WindowAdapter() {
+//            @Override
+//            public void windowOpened(WindowEvent e) {
+//                playMusic();
+//                //只能不播放
+////                btnStop.setVisible(false);
+////                btnStop.setEnabled(false);
+//            }
+//        });
     }
     //背景音乐播放
     public void playMusic(){
+        flag=1;
         try {
-            // 加载音乐文件
+            // 加载音乐文件，文件路径，创建音频输入流
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource("/music/刘晨 - 我还有点小糊涂 (片段版伴奏).wav"));
 
             // 创建音频剪辑
@@ -154,18 +159,28 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
             // 打开音频剪辑并开始播放
             clip.open(audioInputStream);
             clip.start();
+            // 设定循环播放次数
+            clip.loop(Clip.LOOP_CONTINUOUSLY);//-1代表无限循环播放
+//            while (clip.getMicrosecondPosition() < clip.getMicrosecondLength()) {
+//                // 可以添加其他操作
+//                playMusic();
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    //判断音乐是否播放完毕
+    public boolean isMusicPlaying() {
+        return clip.isRunning();
+    }
     //停止播放
     public void stopMusic(){
-        System.out.println(1);
-        if (clip != null && clip.isRunning()) {
-            System.out.println(2);
+//        System.out.println(1);
+//            System.out.println(2);
             clip.stop();
             clip.close();
-        }
+
     }
 
     private void initJPanel() {
@@ -200,6 +215,9 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
                 sumS--;
             }
         }, 0, 1, TimeUnit.SECONDS);
+   if(isMusicPlaying()==false){
+       stopMusic();
+   }
     }
 
     private void initJLB() {
