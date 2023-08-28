@@ -46,6 +46,7 @@ public class GamePanel extends JPanel{//游戏迷宫面板
         setBounds(10,120,765,500);
 
         table = new JTable(2*row+1,2*col+1);
+        table.setDefaultEditor(Object.class, null);
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         String[] columns = new String[2*col+1];
         for(int i=0;i<2*col+1;i++) columns[i]="";
