@@ -7,18 +7,18 @@ import java.io.*;
 
 class Edge{
 
-    int start;
-    int end;
-    int value;
+    int start;//边的起点
+    int end;//边的终点
+    int value;//边的权值
 
     public Edge(){
 
     }
 
     public Edge(int start,int end,int value){
-        this.start = start;
-        this.end = end;
-        this.value = value;
+        this.start = start;//边的起点
+        this.end = end;//边的终点
+        this.value = value;//边的权值
     }
 
 
@@ -42,8 +42,8 @@ class Union {
     //返回根节点的同时进行路径压缩
     public int find(int p){
         while(parent[p]!=p){
-            p = parent[p];
-            parent[p] = parent[parent[p]];
+            p = parent[p];//迭代
+            parent[p] = parent[parent[p]];//路径压缩
         }
         return parent[p];
     }
@@ -60,13 +60,13 @@ class Union {
         if(pRoot == qRoot){
             return ;
         }
-        if(rank[pRoot]<rank[qRoot]){
+        if(rank[pRoot]<rank[qRoot]){//根节点树层数不变
             parent[pRoot] = qRoot;
         }else if(rank[pRoot]>rank[qRoot]){
             parent[qRoot] = pRoot;
         }else{
-            parent[pRoot] = qRoot;
-            rank[qRoot]++;
+            parent[pRoot] = qRoot;//p加到q上
+            rank[qRoot]++;//路径压缩，新加的树最多两层，根节点树层数只加一
         }
     }
 
@@ -74,8 +74,8 @@ class Union {
 
 public class MapUtil {
     Union unionUtil;
-    ArrayList<Edge> list;
-    ArrayList<Edge> map;
+    ArrayList<Edge> list;//存储（row-1）*col+(col-1)*row条带权边
+    ArrayList<Edge> map;//存储需要打通的边
     int row;
     int col;
 
@@ -88,27 +88,29 @@ public class MapUtil {
         init();
         //mapStore();
         //getLocalMap(3);
-        //System.out.println(getLocalMapNum());
-        //System.out.println(getLocalMapList());
+        //System.out.println("地图文件中有的地图数量：");
+        //System.out.println(getLocalMapSize());
+        //System.out.println("地图文件的地图名称列表：");
+        //getLevelList();
     }
 
     public void init(){
-        for(int i=0;i<col-1;i++){
+        for(int i=0;i<col-1;i++){//网格地图最上横边添加
             list.add(new Edge(i,i+1,(int) (Math.random()*100000)));
         }
 
-        for(int i=0;i<row-1;i++){
+        for(int i=0;i<row-1;i++){//网格地图最左纵边添加
             list.add(new Edge(i*col,(i+1)*col,(int) (Math.random()*100000)));
         }
 
         for(int i=1;i<row;i++){
             for(int j=1;j<col;j++){
-                list.add(new Edge(i*col+j-1,i*col+j,(int) (Math.random()*100000)));
-                list.add(new Edge((i-1)*col+j,i*col+j,(int) (Math.random()*100000)));
+                list.add(new Edge(i*col+j-1,i*col+j,(int) (Math.random()*100000)));//每个点左邻边
+                list.add(new Edge((i-1)*col+j,i*col+j,(int) (Math.random()*100000)));//每个点上邻边
             }
         }
 
-        Collections.sort(list,new Comparator<Edge>() {
+        Collections.sort(list,new Comparator<Edge>() {//升序排序
             @Override
             public int compare(Edge o1, Edge o2) {
                 if(o1.value<o2.value)
@@ -116,7 +118,7 @@ public class MapUtil {
                 else
                     return 1;
             }
-        });//排序
+        });//根据 Collections.sort() 的实现，当比较器返回负数时，表示第一个元素应该排在第二个元素之前，即升序排序
 
         int count = 0;
         //最小生成树
@@ -138,7 +140,7 @@ public class MapUtil {
         int [][] target=getRandomMap(getMap());
 
         int num=getLocalMapSize();
-        num++;
+            num++;
         try {
             // 创建一个输出流来写入文件
             String  name="src\\map\\"+num+".map";
@@ -153,7 +155,7 @@ public class MapUtil {
             // 关闭输出流
             objOut.close();
 
-            System.out.println("数组已成功序列化到文件。");
+            //System.out.println("数组已成功序列化到文件。");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -177,12 +179,12 @@ public class MapUtil {
             objIn.close();
 
             // 打印二维数组
-            for (int[] row : array) {
-                for (int val : row) {
-                    System.out.print(val + " ");
-                }
-                System.out.println();
-            }
+//            for (int[] row : array) {
+//                for (int val : row) {
+//                    System.out.print(val + " ");
+//                }
+//                System.out.println();
+//            }
 
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -190,8 +192,8 @@ public class MapUtil {
         return array;
     }
 
-     public int [][] getRandomMap(int [][] map){
-       int[] dx={-1,1,0,0};
+    public int [][] getRandomMap(int [][] map){
+       int[] dx={-1,1,0,0};//左右上下的顺序
        int[] dy={0,0,-1,1};
        int row=map.length;
        int col=map[0].length;
@@ -204,24 +206,25 @@ public class MapUtil {
                int ran=random.nextInt(100);
 
                int flag1=0,flag2=0,flag3=0,flag4=0;
-               if(map[i][j]==-1&&ran%6==1){
+               if(map[i][j]==-1&&ran%6==1){//该点为通路，且近1/6的概率设置收费站
                    for(int k=0;k<4;k++){
                        int x=i+dx[k];
                        int y=j+dy[k];
                        if (x < 1 || x >= row-1 || y< 1 || y >= col-1) continue;
 
                        if(map[x][y]==-1){
-                           if(k==0){
+                           if(k==0){//该点左方的点为路
                                flag1=1;
-                           }else if(k==1){
+                           }else if(k==1){//该点右方的点为路
                                flag2=1;
-                           }else if(k==2){
+                           }else if(k==2){//该点上方的点为路
                                flag3=1;
-                           }else{
+                           }else{//该点下方的点为路
                                flag4=1;
                            }
                        }
                    }
+                   //保证只有左右通或上下通
                    if(flag1==1&&flag2==1&&flag3==0&&flag4==0||flag1==0&&flag2==0&&flag3==1&&flag4==1) map[i][j]=random.nextInt(9)+1;
                    flag1=0;flag2=0;flag3=0;flag4=0;
                }
@@ -236,7 +239,6 @@ public class MapUtil {
 //        }
        return map;
     }
-    
     public int[][] getMap(){
         int[][] array1 = new int[2*row+1][2*col+1];
         //网格留空
@@ -269,7 +271,7 @@ public class MapUtil {
 
 
 
-        for(Edge edge:map){
+        for(Edge edge:map){//打通道路
             int start = edge.start;
             int end = edge.end;
             if(Math.abs(start-end)==1){//左右连通
@@ -283,9 +285,15 @@ public class MapUtil {
             }
         }
 
-        array1[0][1]=0;
+        array1[0][1]=0;//设定起点与终点
         array1[2*row][2*col-1]=0;
 
+//        for (int[] row : array1) {//打印二维数组
+//            for (int val : row) {
+//                System.out.print(val + " ");
+//            }
+//            System.out.println();
+//        }
         return array1;
     }
 
@@ -318,14 +326,14 @@ public class MapUtil {
             for (File file : files) {
                 if (file.isFile()) {
                     String fileName = file.getName();
-                    String levelName = "第"+fileName.substring(0,fileName.length()-4)+"关";
+                    String levelName = fileName.substring(0,fileName.length()-4)+"level";
                     stringList.add(levelName);
                 }
             }
         }
 
         String[] stringArray = stringList.toArray(new String[stringList.size()]);
-        //System.out.println(Arrays.toString(stringArray));
+       // System.out.println(Arrays.toString(stringArray));
         return stringArray;
     }
 
