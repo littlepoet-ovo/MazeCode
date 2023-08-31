@@ -140,7 +140,7 @@ public class MapUtil {
         int [][] target=getRandomMap(getMap());
 
         int num=getLocalMapSize();
-            num++;
+        num++;
         try {
             // 创建一个输出流来写入文件
             String  name="src\\map\\"+num+".map";
@@ -173,7 +173,7 @@ public class MapUtil {
             ObjectInputStream objIn = new ObjectInputStream(fileIn);
 
             // 读取对象并转换为二维数组
-             array = (int[][]) objIn.readObject();
+            array = (int[][]) objIn.readObject();
 
             // 关闭输入流
             objIn.close();
@@ -193,43 +193,43 @@ public class MapUtil {
     }
 
     public int [][] getRandomMap(int [][] map){
-       int[] dx={-1,1,0,0};//左右上下的顺序
-       int[] dy={0,0,-1,1};
-       int row=map.length;
-       int col=map[0].length;
-       Random random = new Random();
-       int cnt=0;
-       //int ran=random.nextInt(100);
+        int[] dx={-1,1,0,0};//左右上下的顺序
+        int[] dy={0,0,-1,1};
+        int row=map.length;
+        int col=map[0].length;
+        Random random = new Random();
+        int cnt=0;
+        //int ran=random.nextInt(100);
 
-       for(int i=0;i<row;i++){
-           for(int j=0;j<col;j++){
-               int ran=random.nextInt(100);
+        for(int i=0;i<row;i++){
+            for(int j=0;j<col;j++){
+                int ran=random.nextInt(100);
 
-               int flag1=0,flag2=0,flag3=0,flag4=0;
-               if(map[i][j]==-1&&ran%6==1){//该点为通路，且近1/6的概率设置收费站
-                   for(int k=0;k<4;k++){
-                       int x=i+dx[k];
-                       int y=j+dy[k];
-                       if (x < 1 || x >= row-1 || y< 1 || y >= col-1) continue;
+                int flag1=0,flag2=0,flag3=0,flag4=0;
+                if(map[i][j]==-1&&ran%6==1){//该点为通路，且近1/6的概率设置收费站
+                    for(int k=0;k<4;k++){
+                        int x=i+dx[k];
+                        int y=j+dy[k];
+                        if (x < 1 || x >= row-1 || y< 1 || y >= col-1) continue;
 
-                       if(map[x][y]==-1){
-                           if(k==0){//该点左方的点为路
-                               flag1=1;
-                           }else if(k==1){//该点右方的点为路
-                               flag2=1;
-                           }else if(k==2){//该点上方的点为路
-                               flag3=1;
-                           }else{//该点下方的点为路
-                               flag4=1;
-                           }
-                       }
-                   }
-                   //保证只有左右通或上下通
-                   if(flag1==1&&flag2==1&&flag3==0&&flag4==0||flag1==0&&flag2==0&&flag3==1&&flag4==1) map[i][j]=random.nextInt(9)+1;
-                   flag1=0;flag2=0;flag3=0;flag4=0;
-               }
-           }
-       }
+                        if(map[x][y]==-1){
+                            if(k==0){//该点左方的点为路
+                                flag1=1;
+                            }else if(k==1){//该点右方的点为路
+                                flag2=1;
+                            }else if(k==2){//该点上方的点为路
+                                flag3=1;
+                            }else{//该点下方的点为路
+                                flag4=1;
+                            }
+                        }
+                    }
+                    //保证只有左右通或上下通
+                    if(flag1==1&&flag2==1&&flag3==0&&flag4==0||flag1==0&&flag2==0&&flag3==1&&flag4==1) map[i][j]=random.nextInt(9)+1;
+                    flag1=0;flag2=0;flag3=0;flag4=0;
+                }
+            }
+        }
 
 //        for (int[] row1 : map) {
 //            for (int val : row1) {
@@ -237,7 +237,7 @@ public class MapUtil {
 //            }
 //            System.out.println();
 //        }
-       return map;
+        return map;
     }
     public int[][] getMap(){
         int[][] array1 = new int[2*row+1][2*col+1];
@@ -326,14 +326,14 @@ public class MapUtil {
             for (File file : files) {
                 if (file.isFile()) {
                     String fileName = file.getName();
-                    String levelName = fileName.substring(0,fileName.length()-4)+"level";
+                    String levelName = "第"+fileName.substring(0,fileName.length()-4)+"关";
                     stringList.add(levelName);
                 }
             }
         }
 
         String[] stringArray = stringList.toArray(new String[stringList.size()]);
-       // System.out.println(Arrays.toString(stringArray));
+        // System.out.println(Arrays.toString(stringArray));
         return stringArray;
     }
 
