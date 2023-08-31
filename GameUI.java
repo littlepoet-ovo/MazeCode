@@ -178,8 +178,8 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
     public void stopMusic(){
 //        System.out.println(1);
 //            System.out.println(2);
-            clip.stop();
-            clip.close();
+        clip.stop();
+        clip.close();
 
     }
 
@@ -215,9 +215,9 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
                 sumS--;
             }
         }, 0, 1, TimeUnit.SECONDS);
-   if(isMusicPlaying()==false){
-       stopMusic();
-   }
+        if(isMusicPlaying()==false){
+            stopMusic();
+        }
     }
 
     private void initJLB() {
@@ -389,13 +389,7 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
                 moneyJLB.setText(String.format("金币：%d", this.sourceMoney-this.useMoney));
                 isRuning=true;
             } else {
-                this.dispose();
-                if (mode == 0) {
-                    new modeSel(d);
-                }
-                else {
-                    new modeTrick(d);
-                }
+                this.closeApp();
             }
         }
         else {
@@ -405,13 +399,7 @@ public class GameUI extends JFrame implements ActionListener, GameRunningData {
                 LoadMap(nowLevel);
             }
             else {
-                this.dispose();
-                if (mode == 0) {
-                    new modeSel(d);
-                }
-                else {
-                    new modeTrick(d);
-                }
+                this.closeApp();
             }
         }
     }
